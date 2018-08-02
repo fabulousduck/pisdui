@@ -49,19 +49,3 @@ func (interpreter *Pisdui) Parse() {
 	interpreter.parseLayersAndMasks()
 	interpreter.parseImageData()
 }
-
-func (interpreter *Pisdui) parseColorModeData() {
-
-}
-
-func (interpreter *Pisdui) parseImageResources() {
-
-}
-
-func (interpreter *Pisdui) parseLayersAndMasks() {
-
-}
-
-func (interpreter *Pisdui) parseImageData() {
-
-}
