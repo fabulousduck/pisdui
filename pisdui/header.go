@@ -13,7 +13,8 @@ type headerIndex struct {
 type FileHeader struct {
 	bytes     []byte
 	signature string
-	version   uint64
+	version   uint16
+	reserved  []byte
 }
 
 func (interpreter *Pisdui) ParseHeader() {
@@ -21,6 +22,7 @@ func (interpreter *Pisdui) ParseHeader() {
 	interpreter.File.Header.bytes = interpreter.FileContents[:headerByteSize]
 	interpreter.File.Header.readSignature()
 	interpreter.File.Header.readVersion()
+	interpreter.File.Header.readReserved()
 	fmt.Println(interpreter.File.Header.signature)
 }
 
@@ -36,6 +38,16 @@ func (fh *FileHeader) readSignature() {
 func (fh *FileHeader) readVersion() {
 	versionStart := 4
 	versionEnd := 6
-	m := fh.bytes[versionStart:versionEnd]
-	fh.version = binary.BigEndian.Uint64(m)
+	fh.version = binary.BigEndian.Uint16(fh.bytes[versionStart:versionEnd])
+}
+
+func (fh *FileHeader) readReserved() {
+	reservedStart := 7
+	reservedEnd := 14
+	fh.reserved = fh.bytes[reservedStart:reservedEnd]
+	for i := 0; i < len(fh.reserved); i++ {
+		if binary.BigEndian.Uint16(fh.reserved) != 0 {
+			panic("reserved space not 0")
+		}
+	}
 }
