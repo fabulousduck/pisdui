@@ -2,19 +2,18 @@ package pisdui
 
 import (
 	"encoding/binary"
-	"fmt"
 )
-
-type headerIndex struct {
-	start  int
-	length int
-}
 
 type FileHeader struct {
 	bytes     []byte
 	signature string
 	version   uint16
 	reserved  []byte
+	channels  uint16
+	height    uint16
+	width     uint16
+	depth     uint16
+	colorMode uint16
 }
 
 func (interpreter *Pisdui) ParseHeader() {
@@ -23,7 +22,10 @@ func (interpreter *Pisdui) ParseHeader() {
 	interpreter.File.Header.readSignature()
 	interpreter.File.Header.readVersion()
 	interpreter.File.Header.readReserved()
-	fmt.Println(interpreter.File.Header.signature)
+	interpreter.File.Header.readChannels()
+	interpreter.File.Header.readDimensions()
+	interpreter.File.Header.readDepth()
+	interpreter.File.Header.readColorMode()
 }
 
 func (fh *FileHeader) readSignature() {
@@ -53,4 +55,32 @@ func (fh *FileHeader) readReserved() {
 			panic("reserved space not 0")
 		}
 	}
+}
+
+func (fh *FileHeader) readChannels() {
+	channelsStart := 15
+	channelsEnd := 20
+	fh.channels = binary.BigEndian.Uint16(fh.bytes[channelsStart:channelsEnd])
+}
+
+func (fh *FileHeader) readDimensions() {
+	heightStart := 21
+	heightEnd := 26
+	widthStart := 27
+	widthEnd := 32
+
+	fh.height = binary.BigEndian.Uint16(fh.bytes[heightStart:heightEnd])
+	fh.width = binary.BigEndian.Uint16(fh.bytes[widthStart:widthEnd])
+}
+
+func (fh *FileHeader) readDepth() {
+	depthStart := 33
+	depthEnd := 36
+	fh.depth = binary.BigEndian.Uint16(fh.bytes[depthStart:depthEnd])
+}
+
+func (fh *FileHeader) readColorMode() {
+	colorModeStart := 37
+	colorModeEnd := 40
+	fh.depth = binary.BigEndian.Uint16(fh.bytes[colorModeStart:colorModeEnd])
 }
