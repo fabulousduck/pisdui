@@ -39,6 +39,9 @@ func (fh *FileHeader) readVersion() {
 	versionStart := 4
 	versionEnd := 6
 	fh.version = binary.BigEndian.Uint16(fh.bytes[versionStart:versionEnd])
+	if fh.version != 1 {
+		panic("Invalid file version.")
+	}
 }
 
 func (fh *FileHeader) readReserved() {
