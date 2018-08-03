@@ -4,7 +4,13 @@ import (
 	"encoding/binary"
 )
 
+type byteSegment struct {
+	from int
+	to   int
+}
+
 type FileHeader struct {
+	// indexMap map[string]byteSegment
 	bytes     []byte
 	signature string
 	version   uint16
@@ -15,6 +21,20 @@ type FileHeader struct {
 	depth     uint16
 	colorMode uint16
 }
+
+// func NewHeader() *FileHeader {
+// 	header := &make(FileHeader)
+// 	indexMap := map[string]byteSegment{
+// 		"signature": byteSegment{
+// 			from: 0,
+// 			to: 4
+// 		},
+// 		"version": byteSegment{
+// 			from: 4,
+
+// 		}
+// 	}
+// }
 
 func (interpreter *Pisdui) ParseHeader() {
 	headerByteSize := 24
@@ -47,8 +67,8 @@ func (fh *FileHeader) readVersion() {
 }
 
 func (fh *FileHeader) readReserved() {
-	reservedStart := 7
-	reservedEnd := 14
+	reservedStart := 6
+	reservedEnd := 13
 	fh.reserved = fh.bytes[reservedStart:reservedEnd]
 	for i := 0; i < len(fh.reserved); i++ {
 		if binary.BigEndian.Uint16(fh.reserved) != 0 {
