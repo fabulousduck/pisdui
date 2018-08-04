@@ -2,7 +2,13 @@ package pisdui
 
 import (
 	"encoding/binary"
+	"fmt"
 )
+
+type byteIndex struct {
+	from int
+	to   int
+}
 
 type FileHeader struct {
 	bytes     []byte
@@ -14,6 +20,19 @@ type FileHeader struct {
 	width     uint16
 	depth     uint16
 	colorMode uint16
+}
+
+func newFileHeader() *FileHeader {
+	HeaderDataIndexMap = map[string]byteIndex{
+		"signature": byteIndex {
+			from: 0,
+			to: 4
+		},
+		"version": byteIndex {
+			from: 4,
+			to 7
+		},
+	}
 }
 
 func (interpreter *Pisdui) ParseHeader() {
@@ -30,8 +49,9 @@ func (interpreter *Pisdui) ParseHeader() {
 
 func (fh *FileHeader) readSignature() {
 	signatureStart := 0
-	signatureEnd := 4
+	signatureEnd := 5
 	fh.signature = string(fh.bytes[signatureStart:signatureEnd])
+	fmt.Println(string(fh.bytes[signatureStart:signatureEnd]))
 	if fh.signature != "8BPS" {
 		panic("Invalid header signature. got " + fh.signature + " Expected 8BPS")
 	}
@@ -39,7 +59,7 @@ func (fh *FileHeader) readSignature() {
 
 func (fh *FileHeader) readVersion() {
 	versionStart := 4
-	versionEnd := 6
+	versionEnd := 7
 	fh.version = binary.BigEndian.Uint16(fh.bytes[versionStart:versionEnd])
 	if fh.version != 1 {
 		panic("Invalid file version.")
