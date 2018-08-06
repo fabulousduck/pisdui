@@ -9,7 +9,7 @@ import (
 /*ReadBytesNInt reads length bytes into a new buffer
 and returns the result as a []byte
 */
-func ReadBytesNInt(file *os.File, length uint64) []byte {
+func ReadBytesNInt(file *os.File, length uint32) []byte {
 	byteBuffer := make([]byte, length)
 	_, err := file.Read(byteBuffer)
 	if err != nil {
@@ -47,7 +47,6 @@ and returns the result as a string*/
 func ReadBytesString(file *os.File, length int) string {
 	byteBuffer := make([]byte, length)
 	_, err := file.Read(byteBuffer)
-	fmt.Println(byteBuffer)
 	if err != nil {
 		panic(err)
 	}
@@ -55,10 +54,11 @@ func ReadBytesString(file *os.File, length int) string {
 }
 
 /*ReadIntoArray16 takes a []byte and creates a new slice containing the values in uint16 form*/
-func ReadIntoArray16(file *os.File, length int) []uint16 {
+func ReadIntoArray16(file *os.File, length uint32) []uint16 {
 	newBufferLength := length / 2
 	newBuffer := make([]uint16, newBufferLength)
-	for i := 0; i < newBufferLength; i++ {
+	var i uint32
+	for i = 0; i < newBufferLength; i++ {
 		newBuffer = append(newBuffer, ReadBytesShort(file))
 	}
 	return newBuffer

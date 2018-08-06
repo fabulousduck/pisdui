@@ -5,9 +5,10 @@ package pisdui
 Only really important when the color mode is set to "Indexed" or "Duotone"
 */
 type ColorModeData struct {
-	Length  uint32
-	Data    uint32
-	Palette []uint16
+	Length      uint32
+	Data        uint32
+	Palette     []uint16
+	DuotoneData []byte
 }
 
 /*ParseColorModeData interprets the colormode data in the file
@@ -30,8 +31,7 @@ func (pd *Pisdui) ParseColorModeData() {
 }
 
 func (pd *Pisdui) parseIndexedColorMode() {
-	length := 768 //https://www.adobe.com/devnet-apps/photoshop/fileformatashtml/#50577409_34945
-	palette := ReadIntoArray16(pd.FileContents, length)
+	palette := ReadIntoArray16(pd.FileContents, pd.PSD.ColorModeData.Length)
 	pd.PSD.ColorModeData.Palette = palette
 }
 
@@ -40,5 +40,6 @@ func (pd *Pisdui) parseDuotoneColorMode() {
 }
 
 func (pd *Pisdui) parseDefaultColorMode() {
-
+	duotoneData := ReadBytesNInt(pd.FileContents, pd.PSD.ColorModeData.Length)
+	pd.PSD.ColorModeData.DuotoneData = duotoneData
 }
