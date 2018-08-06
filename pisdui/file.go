@@ -53,3 +53,13 @@ func ReadBytesString(file *os.File, length int) string {
 	}
 	return string(byteBuffer)
 }
+
+/*ReadIntoArray16 takes a []byte and creates a new slice containing the values in uint16 form*/
+func ReadIntoArray16(file *os.File, length int) []uint16 {
+	newBufferLength := length / 2
+	newBuffer := make([]uint16, newBufferLength)
+	for i := 0; i < newBufferLength; i++ {
+		newBuffer = append(newBuffer, ReadBytesShort(file))
+	}
+	return newBuffer
+}

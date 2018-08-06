@@ -1,9 +1,5 @@
 package pisdui
 
-import (
-	"fmt"
-)
-
 type FileHeader struct {
 	signature string
 	version   uint16
@@ -23,11 +19,6 @@ func (interpreter *Pisdui) ParseHeader() {
 	interpreter.readDimensions()
 	interpreter.readDepth()
 	interpreter.readColorMode()
-	interpreter.dump()
-}
-
-func (fh *Pisdui) dump() {
-	fmt.Printf("%+v\n", fh)
 }
 
 func (pd *Pisdui) readSignature() {

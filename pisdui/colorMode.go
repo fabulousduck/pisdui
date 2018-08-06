@@ -5,8 +5,9 @@ package pisdui
 Only really important when the color mode is set to "Indexed" or "Duotone"
 */
 type ColorModeData struct {
-	Length uint32
-	Data   uint32
+	Length  uint32
+	Data    uint32
+	Palette []uint16
 }
 
 /*ParseColorModeData interprets the colormode data in the file
@@ -18,24 +19,26 @@ func (pd *Pisdui) ParseColorModeData() {
 	fileColorMode := pd.PSD.Header.colorMode
 	switch fileColorMode {
 	case "Indexed":
-		pd.PSD.ColorModeData.parseIndexedColorMode()
+		pd.parseIndexedColorMode()
 		break
 	case "Duotone":
-		pd.PSD.ColorModeData.parseDuotoneColorMode()
+		pd.parseDuotoneColorMode()
 		break
 	default:
-		pd.PSD.ColorModeData.parseDefaultColorMode()
+		pd.parseDefaultColorMode()
 	}
 }
 
-func (cmd *ColorModeData) parseIndexedColorMode() {
+func (pd *Pisdui) parseIndexedColorMode() {
+	length := 768 //https://www.adobe.com/devnet-apps/photoshop/fileformatashtml/#50577409_34945
+	palette := ReadIntoArray16(pd.FileContents, length)
+	pd.PSD.ColorModeData.Palette = palette
+}
+
+func (pd *Pisdui) parseDuotoneColorMode() {
 
 }
 
-func (cmd *ColorModeData) parseDuotoneColorMode() {
-
-}
-
-func (cmd *ColorModeData) parseDefaultColorMode() {
+func (pd *Pisdui) parseDefaultColorMode() {
 
 }
