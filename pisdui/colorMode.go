@@ -26,7 +26,7 @@ func (pd *Pisdui) ParseColorModeData() {
 		pd.parseDuotoneColorMode()
 		break
 	default:
-		pd.parseDefaultColorMode()
+		break
 	}
 }
 
@@ -36,10 +36,6 @@ func (pd *Pisdui) parseIndexedColorMode() {
 }
 
 func (pd *Pisdui) parseDuotoneColorMode() {
-
-}
-
-func (pd *Pisdui) parseDefaultColorMode() {
 	duotoneData := ReadBytesNInt(pd.FileContents, pd.PSD.ColorModeData.Length)
 	pd.PSD.ColorModeData.DuotoneData = duotoneData
 }

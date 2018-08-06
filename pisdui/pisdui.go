@@ -5,9 +5,6 @@ import (
 	"os"
 )
 
-type ImageResources struct {
-}
-
 type LayerMaskInfo struct {
 }
 
@@ -44,7 +41,12 @@ func (interpreter *Pisdui) LoadFile(path string) {
 func (interpreter *Pisdui) Parse() {
 	interpreter.ParseHeader()
 	interpreter.ParseColorModeData()
-	interpreter.parseImageResources()
+	interpreter.ParseImageResources()
 	interpreter.parseLayersAndMasks()
 	interpreter.parseImageData()
+	interpreter.dump()
+}
+
+func (pd *Pisdui) dump() {
+	fmt.Printf("%+v\n", pd)
 }
