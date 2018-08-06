@@ -5,9 +5,6 @@ import (
 	"os"
 )
 
-type ColorModeData struct {
-}
-
 type ImageResources struct {
 }
 
@@ -46,7 +43,7 @@ func (interpreter *Pisdui) LoadFile(path string) {
 
 func (interpreter *Pisdui) Parse() {
 	interpreter.ParseHeader()
-	interpreter.parseColorModeData()
+	interpreter.ParseColorModeData()
 	interpreter.parseImageResources()
 	interpreter.parseLayersAndMasks()
 	interpreter.parseImageData()
