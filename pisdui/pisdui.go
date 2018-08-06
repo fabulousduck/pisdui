@@ -1,7 +1,8 @@
 package pisdui
 
 import (
-	"io/ioutil"
+	"fmt"
+	"os"
 )
 
 type ColorModeData struct {
@@ -16,7 +17,7 @@ type LayerMaskInfo struct {
 type ImageData struct {
 }
 
-type File struct {
+type PSD struct {
 	Header         FileHeader
 	ColorModeData  ColorModeData
 	ImageResources ImageResources
@@ -25,8 +26,8 @@ type File struct {
 }
 
 type Pisdui struct {
-	File         File
-	FileContents []byte
+	PSD          PSD
+	FileContents *os.File
 }
 
 func NewInterpreter() *Pisdui {
@@ -34,12 +35,13 @@ func NewInterpreter() *Pisdui {
 }
 
 func (interpreter *Pisdui) LoadFile(path string) {
-	data, err := ioutil.ReadFile(path)
+	file, err := os.Open(path)
 	if err != nil {
+		fmt.Println(err)
 		panic(err)
 	}
 
-	interpreter.FileContents = data
+	interpreter.FileContents = file
 }
 
 func (interpreter *Pisdui) Parse() {

@@ -1,106 +1,93 @@
 package pisdui
 
 import (
-	"encoding/binary"
 	"fmt"
 )
 
-type byteIndex struct {
-	from int
-	to   int
-}
-
 type FileHeader struct {
-	bytes     []byte
 	signature string
 	version   uint16
 	reserved  []byte
 	channels  uint16
-	height    uint16
-	width     uint16
+	height    uint32
+	width     uint32
 	depth     uint16
-	colorMode uint16
-}
-
-func newFileHeader() *FileHeader {
-	HeaderDataIndexMap = map[string]byteIndex{
-		"signature": byteIndex {
-			from: 0,
-			to: 4
-		},
-		"version": byteIndex {
-			from: 4,
-			to 7
-		},
-	}
+	colorMode string
 }
 
 func (interpreter *Pisdui) ParseHeader() {
-	headerByteSize := 24
-	interpreter.File.Header.bytes = interpreter.FileContents[:headerByteSize]
-	interpreter.File.Header.readSignature()
-	interpreter.File.Header.readVersion()
-	interpreter.File.Header.readReserved()
-	interpreter.File.Header.readChannels()
-	interpreter.File.Header.readDimensions()
-	interpreter.File.Header.readDepth()
-	interpreter.File.Header.readColorMode()
+	interpreter.readSignature()
+	interpreter.readVersion()
+	interpreter.readReserved()
+	interpreter.readChannels()
+	interpreter.readDimensions()
+	interpreter.readDepth()
+	interpreter.readColorMode()
+	interpreter.dump()
 }
 
-func (fh *FileHeader) readSignature() {
-	signatureStart := 0
-	signatureEnd := 5
-	fh.signature = string(fh.bytes[signatureStart:signatureEnd])
-	fmt.Println(string(fh.bytes[signatureStart:signatureEnd]))
-	if fh.signature != "8BPS" {
-		panic("Invalid header signature. got " + fh.signature + " Expected 8BPS")
+func (fh *Pisdui) dump() {
+	fmt.Printf("%+v\n", fh)
+}
+
+func (pd *Pisdui) readSignature() {
+	signature := ReadBytesString(pd.FileContents, 4)
+	if signature != "8BPS" {
+		panic("Invalid header signature. got-" + signature + "-Expected 8BPS")
 	}
+	pd.PSD.Header.signature = signature
 }
 
-func (fh *FileHeader) readVersion() {
-	versionStart := 4
-	versionEnd := 7
-	fh.version = binary.BigEndian.Uint16(fh.bytes[versionStart:versionEnd])
-	if fh.version != 1 {
+func (pd *Pisdui) readVersion() {
+	version := ReadBytesShort(pd.FileContents)
+	if version != 1 {
 		panic("Invalid file version.")
 	}
+	pd.PSD.Header.version = version
 }
 
-func (fh *FileHeader) readReserved() {
-	reservedStart := 7
-	reservedEnd := 14
-	fh.reserved = fh.bytes[reservedStart:reservedEnd]
-	for i := 0; i < len(fh.reserved); i++ {
-		if binary.BigEndian.Uint16(fh.reserved) != 0 {
-			panic("reserved space not 0")
-		}
+func (pd *Pisdui) readReserved() {
+	reserved := ReadBytesNInt(pd.FileContents, 6)
+	pd.PSD.Header.reserved = reserved
+}
+
+func (pd *Pisdui) readChannels() {
+	channels := ReadBytesShort(pd.FileContents)
+	if channels < 1 || channels > 56 {
+		panic("header channels out of range")
 	}
+	pd.PSD.Header.channels = channels
 }
 
-func (fh *FileHeader) readChannels() {
-	channelsStart := 15
-	channelsEnd := 20
-	fh.channels = binary.BigEndian.Uint16(fh.bytes[channelsStart:channelsEnd])
+func (pd *Pisdui) readDimensions() {
+	height := ReadBytesLong(pd.FileContents)
+	width := ReadBytesLong(pd.FileContents)
+	if width < 1 || width > 30000 || height < 1 || height > 30000 {
+		panic("invalid file dimensions")
+	}
+
+	pd.PSD.Header.height = height
+	pd.PSD.Header.width = width
 }
 
-func (fh *FileHeader) readDimensions() {
-	heightStart := 21
-	heightEnd := 26
-	widthStart := 27
-	widthEnd := 32
-
-	fh.height = binary.BigEndian.Uint16(fh.bytes[heightStart:heightEnd])
-	fh.width = binary.BigEndian.Uint16(fh.bytes[widthStart:widthEnd])
+func (pd *Pisdui) readDepth() {
+	depth := ReadBytesShort(pd.FileContents)
+	pd.PSD.Header.depth = depth
 }
 
-func (fh *FileHeader) readDepth() {
-	depthStart := 33
-	depthEnd := 36
-	fh.depth = binary.BigEndian.Uint16(fh.bytes[depthStart:depthEnd])
-}
+func (pd *Pisdui) readColorMode() {
 
-func (fh *FileHeader) readColorMode() {
-	colorModeStart := 37
-	colorModeEnd := 40
-	fh.depth = binary.BigEndian.Uint16(fh.bytes[colorModeStart:colorModeEnd])
+	colorModes := map[uint16]string{
+		0: "Bitmap",
+		1: "Greyscale",
+		2: "Indexed",
+		3: "RGB",
+		4: "CYMK",
+		7: "Multichannel",
+		8: "Duotone",
+		9: "Lab",
+	}
+
+	colorMode := ReadBytesShort(pd.FileContents)
+	pd.PSD.Header.colorMode = colorModes[colorMode]
 }
