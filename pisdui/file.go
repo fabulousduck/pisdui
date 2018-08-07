@@ -42,6 +42,17 @@ func ReadBytesShort(file *os.File) uint16 {
 	return binary.BigEndian.Uint16(byteBuffer)
 }
 
+/*ReadSingleByte reads 1 bytes into a new buffer
+and returns the result as an uint16*/
+func ReadSingleByte(file *os.File) int {
+	byteBuffer := make([]byte, 1)
+	_, err := file.Read(byteBuffer)
+	if err != nil {
+		panic(err)
+	}
+	return int(byteBuffer[0])
+}
+
 /*ReadBytesString reads length number of bytes into a new buffer
 and returns the result as a string*/
 func ReadBytesString(file *os.File, length int) string {

@@ -44,7 +44,7 @@ func (interpreter *Pisdui) Parse() {
 	interpreter.ParseImageResources()
 	interpreter.parseLayersAndMasks()
 	interpreter.parseImageData()
-	interpreter.dump()
+	// interpreter.dump()
 }
 
 func (pd *Pisdui) dump() {
