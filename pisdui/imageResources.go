@@ -43,13 +43,10 @@ func (pd *Pisdui) ParseResourceBlock() *ResourceBlock {
 }
 
 func (pd *Pisdui) parsePascalString() (string, int) {
-	stringLength := ReadBytesShort(pd.FileContents)
-	if stringLength%2 != 0 {
-		stringLength++
+	b := ReadBytesNInt(pd.FileContents, 1)
+	if b[0] == 0 {
+		ReadBytesNInt(pd.FileContents, 1)
 	}
-	if stringLength == 0 {
-		return "", 2
-	}
-	pascalStringContents := ReadBytesString(pd.FileContents, int(stringLength))
+	pascalStringContents := ReadBytesString(pd.FileContents, int(b[0]))
 	return pascalStringContents, len(pascalStringContents)
 }
