@@ -7,6 +7,6 @@ import (
 func main() {
 
 	pd := pisdui.NewInterpreter()
-	pd.LoadFile("./test2.psd")
+	pd.LoadFile("./test4.psd")
 	pd.Parse()
 }

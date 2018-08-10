@@ -24,6 +24,7 @@ func (pd *Pisdui) ParseImageResources() {
 		block := pd.ParseResourceBlock()
 		pd.PSD.ImageResources.ResourceBlocks = append(pd.PSD.ImageResources.ResourceBlocks, *block)
 		i += block.byteSize
+		fmt.Println("read ", i, " out of ", pd.PSD.ImageResources.Length)
 		// fmt.Printf("%+v\n", block)
 	}
 }
@@ -39,7 +40,7 @@ func (pd *Pisdui) ParseResourceBlock() *ResourceBlock {
 	block.DataSize = ReadBytesLong(pd.FileContents)
 	block.DataBlock = ReadBytesNInt(pd.FileContents, block.DataSize)
 	if block.DataSize%2 != 0 {
-		fmt.Println("odd data size: ", block.DataSize)
+		// fmt.Println("odd data size: ", block.DataSize)
 		ReadSingleByte(pd.FileContents)
 	}
 	block.byteSize = uint32(4 + 2 + stringLength + 4 + int(block.DataSize))
