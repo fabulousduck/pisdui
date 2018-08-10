@@ -1,8 +1,8 @@
 # pisdui
 psd file interpreter in go
 
+# Roadmap
 
-# TODO
-
-- make map where memory spaces are defined to read from avoid reading same memory
-- make other file section parsers
+- [x] build header parser
+- [x] build resource block parser
+- [ ] build layer parser
