@@ -1,6 +1,7 @@
 package util
 
 import (
+	"bytes"
 	"encoding/binary"
 	"fmt"
 	"os"
@@ -22,7 +23,7 @@ func ReadBytesNInt(file *os.File, length uint32) []byte {
 }
 
 /*ReadBytesLong reads 4 bytes into a new buffer
-and returns the result as an uint32*/
+and returns the result as a uint32*/
 func ReadBytesLong(file *os.File) uint32 {
 
 	byteBuffer := make([]byte, 4)
@@ -84,4 +85,21 @@ func ReadIntoArray16(file *os.File, length uint32) []uint16 {
 	}
 
 	return newBuffer
+}
+
+/*ParseUnicodeString parses a unicode string from the
+photoshop file into a string*/
+func ParseUnicodeString(file *os.File) string {
+	length := ReadBytesLong(file)
+	fmt.Println("length : ", length)
+	if length == 0 {
+		return ""
+	}
+
+	var str bytes.Buffer
+	var i uint32
+	for i = 0; i < length; i++ {
+		str.WriteString(ReadBytesString(file, 1))
+	}
+	return fmt.Sprintf(str.String())
 }

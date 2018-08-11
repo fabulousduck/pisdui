@@ -1,9 +1,9 @@
 package imageresource
 
 import (
+	"fmt"
 	"os"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/fabulousduck/pisdui/pisdui/util"
 )
 
@@ -42,15 +42,17 @@ func (ir *Data) Parse(file *os.File) {
 	var i uint32
 	for i = 0; i < ir.Length; {
 		block := ir.parseResourceBlock(file)
+		// spew.Dump(block)
 		ir.ResourceBlocks = append(ir.ResourceBlocks, *block)
-		spew.Dump(ir)
 		i += block.byteSize
 	}
+
 }
 
 func (ir *Data) parseResourceBlock(file *os.File) *ResourceBlock {
 	readByteCount := 0
-
+	pos, _ := file.Seek(0, 1)
+	fmt.Println("block start index : ", pos)
 	block := new(ResourceBlock)
 	block.Signature = util.ReadBytesString(file, 4)
 	readByteCount += 4
@@ -64,6 +66,10 @@ func (ir *Data) parseResourceBlock(file *os.File) *ResourceBlock {
 	block.PascalString = pascalString
 	block.DataSize = util.ReadBytesLong(file)
 	readByteCount += 4
+
+	if block.ID == 1088 {
+		parseDescriptor(file)
+	}
 
 	block.DataBlock = util.ReadBytesNInt(file, block.DataSize)
 	readByteCount += int(block.DataSize)
@@ -83,7 +89,7 @@ func (ir *Data) parsePascalString(file *os.File) (string, int) {
 		util.ReadSingleByte(file)
 		return "", 1
 	}
-
+	fmt.Println("PASCAL PRESENT ")
 	s := util.ReadBytesString(file, b)
 
 	if b%2 != 0 {
