@@ -6,7 +6,7 @@ import (
 
 func main() {
 
-	pd := pisdui.NewInterpreter()
+	pd := pisdui.NewPSD()
 	pd.LoadFile("./test4.psd")
 	pd.Parse()
 }
