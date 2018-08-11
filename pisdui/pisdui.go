@@ -3,6 +3,9 @@ package pisdui
 import (
 	"fmt"
 	"os"
+
+	"github.com/fabulousduck/pisdui/pisdui/header"
+	"github.com/fabulousduck/pisdui/pisdui/imageresource"
 )
 
 type LayerMaskInfo struct {
@@ -12,23 +15,25 @@ type ImageData struct {
 }
 
 type PSD struct {
-	Header         FileHeader
+	Fp             *os.File
+	Header         header.FileHeader
 	ColorModeData  ColorModeData
-	ImageResources ImageResources
+	ImageResources imageresource.ImageResourceData
 	LayerMaskInfo  LayerMaskInfo
 	ImageData      ImageData
 }
 
-type Pisdui struct {
-	PSD          PSD
-	FileContents *os.File
+/*NewPSD creates a new PSD struct
+to read the file pointer into and
+the data read from the photoshop file*/
+func NewPSD() *PSD {
+	return new(PSD)
 }
 
-func NewInterpreter() *Pisdui {
-	return new(Pisdui)
-}
-
-func (interpreter *Pisdui) LoadFile(path string) {
+/*LoadFile loads opens the file and
+places the file pointer <*os.File>
+into the PSD object*/
+func (psd *PSD) LoadFile(path string) {
 	file, err := os.Open(path)
 	if err != nil {
 		fmt.Println(err)
@@ -38,15 +43,15 @@ func (interpreter *Pisdui) LoadFile(path string) {
 	interpreter.FileContents = file
 }
 
-func (interpreter *Pisdui) Parse() {
-	interpreter.ParseHeader()
-	interpreter.ParseColorModeData()
-	interpreter.ParseImageResources()
-	interpreter.parseLayersAndMasks()
-	interpreter.parseImageData()
-	// interpreter.dump()
-}
+/*Parse takes the loaded file and parses it into
+usable structs separated into the different main
+parts of the file*/
+func (psd *PSD) Parse() {
+	header := header.NewFileHeader()
+	PSD.Header = header.ParseHeader()
 
-func (pd *Pisdui) dump() {
-	fmt.Printf("%+v\n", pd)
+	psd.ParseColorModeData()
+	psd.ParseImageResources()
+	psd.parseLayersAndMasks()
+	psd.parseImageData()
 }
