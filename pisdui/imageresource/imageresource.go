@@ -3,6 +3,7 @@ package imageresource
 import (
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/fabulousduck/pisdui/pisdui/util"
 )
 
@@ -17,12 +18,13 @@ type Data struct {
 /*ResourceBlock contains the raw unparsed data from
 a resource block in the photoshop file*/
 type ResourceBlock struct {
-	byteSize     uint32
-	Signature    string
-	ID           uint16
-	PascalString string
-	DataSize     uint32
-	DataBlock    []byte
+	byteSize            uint32
+	Signature           string
+	ID                  uint16
+	PascalString        string
+	DataSize            uint32
+	DataBlock           []byte
+	ParsedResourceBlock parsedResourceBlock
 }
 
 /*NewData creates a new ImageResources struct
@@ -33,7 +35,7 @@ func NewData() *Data {
 	return new(Data)
 }
 
-/*ParseImageResources will read all image resources located in
+/*Parse will read all image resources located in
 the photoshop file and will read them into the ImageResources struct*/
 func (ir *Data) Parse(file *os.File) {
 	ir.Length = util.ReadBytesLong(file)
@@ -41,24 +43,37 @@ func (ir *Data) Parse(file *os.File) {
 	for i = 0; i < ir.Length; {
 		block := ir.parseResourceBlock(file)
 		ir.ResourceBlocks = append(ir.ResourceBlocks, *block)
+		spew.Dump(ir)
 		i += block.byteSize
 	}
 }
 
 func (ir *Data) parseResourceBlock(file *os.File) *ResourceBlock {
+	readByteCount := 0
+
 	block := new(ResourceBlock)
 	block.Signature = util.ReadBytesString(file, 4)
+	readByteCount += 4
+
 	block.ID = util.ReadBytesShort(file)
+	readByteCount += 2
+
 	pascalString, stringLength := ir.parsePascalString(file)
+	readByteCount += stringLength
+
 	block.PascalString = pascalString
 	block.DataSize = util.ReadBytesLong(file)
+	readByteCount += 4
+
 	block.DataBlock = util.ReadBytesNInt(file, block.DataSize)
+	readByteCount += int(block.DataSize)
 
 	if block.DataSize%2 != 0 {
 		util.ReadSingleByte(file)
+		readByteCount += 1
 	}
 
-	block.byteSize = uint32(4 + 2 + stringLength + 4 + int(block.DataSize))
+	block.byteSize = uint32(readByteCount)
 	return block
 }
 

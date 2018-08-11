@@ -56,4 +56,5 @@ func (psd *PSD) Parse() {
 	imageResourceData := imageresource.NewData()
 	imageResourceData.Parse(psd.Fp)
 	psd.ImageResources = imageResourceData
+
 }

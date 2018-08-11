@@ -1,5 +1,5 @@
-package pisdui
+package imagedata
 
-func (interpreter *Pisdui) parseImageData() {
-
+/*Data contains the image data for the phtooshop file*/
+type Data struct {
 }

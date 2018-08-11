@@ -1,41 +1,52 @@
-package pisdui
+package colormode
 
-/*ColorModeData contains data related to the files colors mode
+import (
+	"os"
+
+	"github.com/fabulousduck/pisdui/pisdui/util"
+)
+
+/*Data contains data related to the files colors mode
 
 Only really important when the color mode is set to "Indexed" or "Duotone"
 */
-type ColorModeData struct {
+type Data struct {
 	Length      uint32
 	Data        uint32
 	Palette     []uint16
 	DuotoneData []byte
 }
 
-/*ParseColorModeData interprets the colormode data in the file
+/*NewData creates a new ColorMode struct
+and returns a pointer to it*/
+func NewData() *Data {
+	return new(Data)
+}
+
+/*Parse interprets the colormode data in the file
 
 Only really interesting when color mode in the header is either "Indexed" or "Duotone"
 */
-func (pd *Pisdui) ParseColorModeData() {
-	pd.PSD.ColorModeData.Length = ReadBytesLong(pd.FileContents)
-	fileColorMode := pd.PSD.Header.colorMode
-	switch fileColorMode {
+func (cm *Data) Parse(file *os.File, colorMode string) {
+	cm.Length = util.ReadBytesLong(file)
+	switch colorMode {
 	case "Indexed":
-		pd.parseIndexedColorMode()
+		cm.parseIndexedColorMode(file)
 		break
 	case "Duotone":
-		pd.parseDuotoneColorMode()
+		cm.parseDuotoneColorMode(file)
 		break
 	default:
 		break
 	}
 }
 
-func (pd *Pisdui) parseIndexedColorMode() {
-	palette := ReadIntoArray16(pd.FileContents, pd.PSD.ColorModeData.Length)
-	pd.PSD.ColorModeData.Palette = palette
+func (cm *Data) parseIndexedColorMode(file *os.File) {
+	palette := util.ReadIntoArray16(file, cm.Length)
+	cm.Palette = palette
 }
 
-func (pd *Pisdui) parseDuotoneColorMode() {
-	duotoneData := ReadBytesNInt(pd.FileContents, pd.PSD.ColorModeData.Length)
-	pd.PSD.ColorModeData.DuotoneData = duotoneData
+func (cm *Data) parseDuotoneColorMode(file *os.File) {
+	duotoneData := util.ReadBytesNInt(file, cm.Length)
+	cm.DuotoneData = duotoneData
 }
