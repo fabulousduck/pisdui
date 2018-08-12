@@ -1,7 +1,6 @@
 package imageresource
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/davecgh/go-spew/spew"
@@ -55,7 +54,6 @@ func parseDescriptor(file *os.File) *descriptor {
 func parseDescriptorItem(file *os.File) *descriptorItem {
 	di := new(descriptorItem)
 	length := util.ReadBytesLong(file)
-	fmt.Println("length > ", length)
 	if length == 0 {
 		di.key = util.ReadBytesString(file, 4)
 	} else {
@@ -94,8 +92,7 @@ func parseOsKeyType(file *os.File, osKeyID string) osKeyBlock {
 		break
 	case "GlbO":
 		break
-	case "type":
-		break
+	case "type": //type and GlbC are both of type class
 	case "GlbC":
 		break
 	case "alis":
