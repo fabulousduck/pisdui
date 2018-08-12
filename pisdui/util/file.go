@@ -1,10 +1,10 @@
 package util
 
 import (
-	"bytes"
 	"encoding/binary"
 	"fmt"
 	"os"
+	"unicode/utf16"
 )
 
 /*ReadBytesNInt reads length bytes into a new buffer
@@ -91,15 +91,15 @@ func ReadIntoArray16(file *os.File, length uint32) []uint16 {
 photoshop file into a string*/
 func ParseUnicodeString(file *os.File) string {
 	length := ReadBytesLong(file)
-	fmt.Println("length : ", length)
 	if length == 0 {
 		return ""
 	}
 
-	var str bytes.Buffer
-	var i uint32
-	for i = 0; i < length; i++ {
-		str.WriteString(ReadBytesString(file, 1))
+	stringBuffer := make([]uint16, length)
+
+	for i := range stringBuffer {
+		stringBuffer[i] = ReadBytesShort(file)
 	}
-	return fmt.Sprintf(str.String())
+
+	return string(utf16.Decode(stringBuffer))
 }

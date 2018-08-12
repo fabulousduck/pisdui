@@ -14,6 +14,7 @@ type parsedResourceBlock interface {
 }
 
 type descriptor struct {
+	version       uint32
 	unicodeString string
 	classID       string
 	itemCount     uint32
@@ -24,19 +25,23 @@ type descriptorItem struct {
 }
 
 func parseDescriptor(file *os.File) *descriptor {
-	fmt.Println("parsing descriptor")
 
 	d := new(descriptor)
-	d.unicodeString = fmt.Sprintf("%s", util.ParseUnicodeString(file))
-	spew.Dump(d)
-	classIdLength := util.ReadBytesLong(file)
-	if classIdLength == 0 {
-		d.classID = string(util.ReadBytesLong(file))
+	d.version = util.ReadBytesLong(file)
+	d.unicodeString = util.ParseUnicodeString(file)
+
+	classIDLength := util.ReadBytesLong(file)
+
+	fmt.Println("classIdLength : ", classIDLength)
+
+	if classIDLength == 0 {
+		d.classID = util.ReadBytesString(file, 4)
 	} else {
 		d.classID = util.ParseUnicodeString(file)
 	}
 
 	d.itemCount = util.ReadBytesLong(file)
+	spew.Dump(d)
 
 	return d
 }
