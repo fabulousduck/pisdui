@@ -1,7 +1,6 @@
 package imageresource
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/util"
@@ -12,13 +11,12 @@ used by the photoshop file and the length of the
 section in the photoshop file*/
 type Data struct {
 	Length         uint32
-	ResourceBlocks []ResourceBlock
+	ResourceBlocks []*ResourceBlock
 }
 
 /*ResourceBlock contains the raw unparsed data from
 a resource block in the photoshop file*/
 type ResourceBlock struct {
-	byteSize            uint32
 	Signature           string
 	ID                  uint16
 	PascalString        string
@@ -37,63 +35,47 @@ func NewData() *Data {
 
 /*Parse will read all image resources located in
 the photoshop file and will read them into the ImageResources struct*/
-func (ir *Data) Parse(file *os.File) {
-	ir.Length = util.ReadBytesLong(file)
-	var i uint32
-	for i = 0; i < ir.Length; {
-		block := ir.parseResourceBlock(file)
-		// spew.Dump(block)
-		ir.ResourceBlocks = append(ir.ResourceBlocks, *block)
-		i += block.byteSize
+func (resourceBlockSection *Data) Parse(file *os.File) {
+	resourceBlockSection.Length = util.ReadBytesLong(file)
+
+	currPos, _ := file.Seek(0, 1)
+	endPos := int(currPos) + int(resourceBlockSection.Length)
+
+	for p, _ := file.Seek(0, 1); int(p) < endPos; {
+		resourceBlockSection.ResourceBlocks = append(
+			resourceBlockSection.ResourceBlocks,
+			resourceBlockSection.parseResourceBlock(file))
 	}
 
 }
 
-func (ir *Data) parseResourceBlock(file *os.File) *ResourceBlock {
+func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlock {
 	readByteCount := 0
-	pos, _ := file.Seek(0, 1)
-	fmt.Println("block start index : ", pos)
 	block := new(ResourceBlock)
 	block.Signature = util.ReadBytesString(file, 4)
-	readByteCount += 4
 
 	block.ID = util.ReadBytesShort(file)
-	readByteCount += 2
 
-	pascalString, stringLength := ir.parsePascalString(file)
-	readByteCount += stringLength
+	pascalString := util.ParsePascalString(file)
 
 	block.PascalString = pascalString
 	block.DataSize = util.ReadBytesLong(file)
 	readByteCount += 4
 
-	if block.ID == 1088 {
-		parseDescriptor(file)
-	}
-
-	block.DataBlock = util.ReadBytesNInt(file, block.DataSize)
-	readByteCount += int(block.DataSize)
+	block.ParsedResourceBlock = parseResourceBlock(file, block.ID)
 
 	if block.DataSize%2 != 0 {
 		util.ReadSingleByte(file)
-		readByteCount += 1
 	}
-
-	block.byteSize = uint32(readByteCount)
 	return block
 }
 
-func (ir *Data) parsePascalString(file *os.File) (string, int) {
-	b := util.ReadSingleByte(file)
-	if b == 0 {
-		util.ReadSingleByte(file)
-		return "", 1
+func parseResourceBlock(file *os.File, id uint16) parsedResourceBlock {
+	var p parsedResourceBlock
+	switch id {
+	case 1088:
+		p = parseDescriptor(file)
+		break
 	}
-	fmt.Println("PASCAL PRESENT ")
-	s := util.ReadBytesString(file, b)
-
-	if b%2 != 0 {
-		util.ReadSingleByte(file)
-	}
-	return s, len(s)
+	return p
 }

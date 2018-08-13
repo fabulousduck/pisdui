@@ -1,6 +1,7 @@
 package imageresource
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/util"
@@ -16,6 +17,8 @@ func (n name) getOsKeyBlockID() string {
 
 func parseName(file *os.File) osKeyBlock {
 	n := new(name)
+	pos, _ := file.Seek(0, 1)
+	fmt.Println("idx before name parse : ", pos)
 	n.name = util.ParseUnicodeString(file)
 	return *n
 }

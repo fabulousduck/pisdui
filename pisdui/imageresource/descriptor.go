@@ -1,6 +1,7 @@
 package imageresource
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/davecgh/go-spew/spew"
@@ -25,6 +26,10 @@ type descriptorItem struct {
 	osKeyBlock osKeyBlock
 }
 
+func (d descriptor) getTypeID() int {
+	return 1088
+}
+
 func parseDescriptor(file *os.File) *descriptor {
 
 	d := new(descriptor)
@@ -47,7 +52,8 @@ func parseDescriptor(file *os.File) *descriptor {
 	}
 
 	spew.Dump(d)
-
+	pos, _ := file.Seek(0, 1)
+	fmt.Println("pos after descriptor read: ", pos)
 	return d
 }
 

@@ -103,3 +103,19 @@ func ParseUnicodeString(file *os.File) string {
 
 	return string(utf16.Decode(stringBuffer))
 }
+
+/*ParsePascalString parses a pascal string directly from file*/
+func ParsePascalString(file *os.File) string {
+	b := ReadSingleByte(file)
+	if b == 0 {
+		ReadSingleByte(file)
+		return ""
+	}
+
+	s := ReadBytesString(file, b)
+
+	if b%2 != 0 {
+		ReadSingleByte(file)
+	}
+	return s
+}
