@@ -10,3 +10,16 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+#build file
+main
+
+#debug
+debug
+
+#test files
+#
+*.psd
+
+#editor files
+.vscode

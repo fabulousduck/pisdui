@@ -1,8 +1,20 @@
 # pisdui
 psd file interpreter in go
 
+# Example
 
-# TODO
+```go
+    package main
 
-- make map where memory spaces are defined to read from avoid reading same memory
-- make other file section parsers
+    import (
+        "github.com/fabulousduck/pisdui/pisdui"
+    )
+
+    func main() {
+
+        pd := pisdui.NewPSD()
+        pd.LoadFile("./test4.psd")
+        pd.Parse()
+    }
+
+```
