@@ -3,8 +3,13 @@ package imageresource
 import (
 	"os"
 
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor"
 	"github.com/fabulousduck/pisdui/pisdui/util"
 )
+
+type parsedResourceBlock interface {
+	getTypeID() int
+}
 
 /*Data contains the resource blocks
 used by the photoshop file and the length of the
@@ -74,7 +79,10 @@ func parseResourceBlock(file *os.File, id uint16) parsedResourceBlock {
 	var p parsedResourceBlock
 	switch id {
 	case 1088:
-		p = parseDescriptor(file)
+		descriptorObject := descriptor.NewDescriptor()
+		p = descriptorObject.Parse(file)
+		break
+	case 10000:
 		break
 	}
 	return p

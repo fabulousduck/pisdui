@@ -1,4 +1,4 @@
-package imageresource
+package reference
 
 import (
 	"os"
@@ -13,7 +13,7 @@ type reference struct {
 
 type referenceItem struct {
 	osTypeKey  string
-	osKeyBlock osKeyBlock
+	osKeyBlock descriptor.osKeyBlock
 }
 
 func (rf reference) getOsKeyBlockID() string {
