@@ -12,9 +12,8 @@ psd file interpreter in go
 
     func main() {
 
-        pd := pisdui.NewPSD()
-        pd.LoadFile("./test4.psd")
-        pd.Parse()
+        psd := pisdui.NewPSD("./psd/test.psd")
+        psd.Parse()
     }
 
 ```

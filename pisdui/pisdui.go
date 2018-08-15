@@ -1,7 +1,6 @@
 package pisdui
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/colormode"
@@ -24,27 +23,13 @@ type PSD struct {
 // NewPSD creates a new PSD struct
 // to read the file pointer into and
 // the data read from the photoshop file
-func NewPSD(path string) *PSD {
+func NewPSD(path string) (*PSD, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		fmt.Println(err)
-		panic(err)
+		return nil, err
 	}
 
-	return &PSD{Fp: file}
-}
-
-// LoadFile loads opens the file and
-// places the file pointer <*os.File>
-// into the PSD object
-func (psd *PSD) LoadFile(path string) {
-	file, err := os.Open(path)
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
-
-	psd.Fp = file
+	return &PSD{Fp: file}, nil
 }
 
 // Parse takes the loaded file and parses it into
