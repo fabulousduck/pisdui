@@ -13,8 +13,8 @@ type Reference struct {
 }
 
 type ReferenceItem struct {
-	OsTypeKey  string
-	OsKeyBlock referenceOsKeyBlock
+	OsTypeKey string
+	// OsKeyBlock figure out how to make OsKeyBlock play nice here
 }
 
 func (reference *Reference) Parse(file *os.File) {
