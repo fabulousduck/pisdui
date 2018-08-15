@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor/types/reference"
 	"github.com/fabulousduck/pisdui/pisdui/util"
 )
 
@@ -25,36 +24,36 @@ type Descriptor struct {
 type descriptorItem struct {
 	key        string
 	osTypeKey  string
-	osKeyBlock osKeyBlock
+	osKeyBlock referenceOsKeyBlock
 }
 
-func (descriptor descriptor) getTypeID() int {
+func (descriptor *Descriptor) GetTypeID() int {
 	return 1088
 }
 
 /*NewDescriptor creates a new descriptor struct*/
 func NewDescriptor() *Descriptor {
-	return new(descriptor)
+	return &Descriptor{}
 }
 
 /*Parse parses data from a descriptor block in a PSD file into a premade descriptor*/
 func (descriptor *Descriptor) Parse(file *os.File) {
 
-	descriptor.version = util.ReadBytesLong(file)
-	descriptor.unicodeString = util.ParseUnicodeString(file)
+	descriptor.Version = util.ReadBytesLong(file)
+	descriptor.UnicodeString = util.ParseUnicodeString(file)
 
 	classIDLength := util.ReadBytesLong(file)
 
 	if classIDLength == 0 {
-		descriptor.classID = util.ReadBytesString(file, 4)
+		descriptor.ClassID = util.ReadBytesString(file, 4)
 	} else {
-		descriptor.classID = util.ParseUnicodeString(file)
+		descriptor.ClassID = util.ParseUnicodeString(file)
 	}
 
-	descriptor.itemCount = util.ReadBytesLong(file)
+	descriptor.ItemCount = util.ReadBytesLong(file)
 
 	var i uint32
-	for i = 0; i < d.itemCount; i++ {
+	for i = 0; i < descriptor.ItemCount; i++ {
 		descriptor.parseDescriptorItem(file)
 	}
 
@@ -77,12 +76,12 @@ func (descriptor *Descriptor) parseDescriptorItem(file *os.File) {
 	descriptor.Items = append(descriptor.Items, descriptorItem)
 }
 
-func parseOsKeyType(file *os.File, osKeyID string) osKeyBlock {
+func parseOsKeyType(file *os.File, osKeyID string) referenceOsKeyBlock {
 
-	var r osKeyBlock
+	var r referenceOsKeyBlock
 	switch osKeyID {
 	case "obj ":
-		r = reference.parseReference(file)
+		r = parseReferenceOsKeyType(file, osKeyID)
 		break
 	case "Objc":
 		break

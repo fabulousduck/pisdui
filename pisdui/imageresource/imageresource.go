@@ -8,7 +8,7 @@ import (
 )
 
 type parsedResourceBlock interface {
-	getTypeID() int
+	GetTypeID() int
 }
 
 /*Data contains the resource blocks
@@ -80,7 +80,8 @@ func parseResourceBlock(file *os.File, id uint16) parsedResourceBlock {
 	switch id {
 	case 1088:
 		descriptorObject := descriptor.NewDescriptor()
-		p = descriptorObject.Parse(file)
+		descriptorObject.Parse(file)
+		p = descriptorObject
 		break
 	case 10000:
 		break
