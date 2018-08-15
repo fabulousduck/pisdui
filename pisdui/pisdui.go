@@ -11,7 +11,7 @@ import (
 	"github.com/fabulousduck/pisdui/pisdui/layerandmask"
 )
 
-/*PSD contains all parsed data from the photoshop file*/
+// PSD contains all parsed data from the photoshop file
 type PSD struct {
 	Fp             *os.File
 	Header         *header.Data
@@ -21,16 +21,22 @@ type PSD struct {
 	ImageData      *imagedata.Data
 }
 
-/*NewPSD creates a new PSD struct
-to read the file pointer into and
-the data read from the photoshop file*/
-func NewPSD() *PSD {
-	return new(PSD)
+// NewPSD creates a new PSD struct
+// to read the file pointer into and
+// the data read from the photoshop file
+func NewPSD(path string) *PSD {
+	file, err := os.Open(path)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+
+	return &PSD{Fp: file}
 }
 
-/*LoadFile loads opens the file and
-places the file pointer <*os.File>
-into the PSD object*/
+// LoadFile loads opens the file and
+// places the file pointer <*os.File>
+// into the PSD object
 func (psd *PSD) LoadFile(path string) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -41,13 +47,13 @@ func (psd *PSD) LoadFile(path string) {
 	psd.Fp = file
 }
 
-/*Parse takes the loaded file and parses it into
-usable structs separated into the different main
-parts of the file*/
+// Parse takes the loaded file and parses it into
+// usable structs separated into the different main
+// parts of the file
 func (psd *PSD) Parse() {
-	header := header.NewData()
-	header.Parse(psd.Fp)
-	psd.Header = header
+	h := header.NewData()
+	h.Parse(psd.Fp)
+	psd.Header = h
 
 	colorModeData := colormode.NewData()
 	colorModeData.Parse(psd.Fp, psd.Header.ColorMode)
