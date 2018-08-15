@@ -50,7 +50,7 @@ func (psd *PSD) LoadFile(path string) {
 // Parse takes the loaded file and parses it into
 // usable structs separated into the different main
 // parts of the file
-func (psd *PSD) Parse() {
+func (psd *PSD) Parse() *PSD {
 	h := header.NewData()
 	h.Parse(psd.Fp)
 	psd.Header = h
@@ -63,4 +63,5 @@ func (psd *PSD) Parse() {
 	imageResourceData.Parse(psd.Fp)
 	psd.ImageResources = imageResourceData
 
+	return psd
 }
