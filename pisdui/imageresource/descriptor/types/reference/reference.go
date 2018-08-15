@@ -3,51 +3,50 @@ package reference
 import (
 	"os"
 
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor/types/enumreference"
 	"github.com/fabulousduck/pisdui/pisdui/util"
 )
 
-type reference struct {
-	itemCount      uint32
-	referenceItems []*referenceItem
+type Reference struct {
+	ItemCount      uint32
+	ReferenceItems []*ReferenceItem
 }
 
-type referenceItem struct {
-	osTypeKey  string
-	osKeyBlock descriptor.osKeyBlock
+type ReferenceItem struct {
+	OsTypeKey  string
+	OsKeyBlock referenceOsKeyBlock
 }
 
-func (rf reference) getOsKeyBlockID() string {
+func (reference *Reference) Parse(file *os.File) {
+	reference.ItemCount = util.ReadBytesLong(file)
+	var i uint32
+	for i = 0; i < reference.ItemCount; i++ {
+		referenceItem := new(ReferenceItem)
+		referenceItem.Parse(file)
+		reference.ReferenceItems = append(reference.ReferenceItems, referenceItem)
+	}
+}
+
+func (reference Reference) getOsKeyBlockID() string {
 	return "obj "
 }
 
-func parseReference(file *os.File) *reference {
-	r := new(reference)
-
-	r.itemCount = util.ReadBytesLong(file)
-	var i uint32
-	for i = 0; i < r.itemCount; i++ {
-		r.referenceItems = append(r.referenceItems, parseReferenceItem(file))
-	}
-
-	return r
+func (referenceItem *ReferenceItem) Parse(file *os.File) {
+	referenceItem.OsTypeKey = util.ReadBytesString(file, 4)
+	referenceItem.OsKeyBlock = parseReferenceOsKeyType(file, referenceItem.OsTypeKey)
 }
 
-func parseReferenceItem(file *os.File) *referenceItem {
-	referenceItem := new(referenceItem)
-	referenceItem.osTypeKey = util.ReadBytesString(file, 4)
-	referenceItem.osKeyBlock = parseReferenceOsKeyType(file, referenceItem.osTypeKey)
-	return referenceItem
-}
-
-func parseReferenceOsKeyType(file *os.File, osKeyID string) osKeyBlock {
-	var r osKeyBlock
+func parseReferenceOsKeyType(file *os.File, osKeyID string) referenceOsKeyBlock {
+	var r referenceOsKeyBlock
 	switch osKeyID {
 	case "prop":
 		break
 	case "Clss":
 		break
 	case "Enmr":
-		r = parseEnumReference(file)
+		enumReferenceBlock := enumreference.NewEnumReference()
+		enumReferenceBlock.Parse(file)
+		r = enumReferenceBlock
 		break
 	case "rele":
 		break

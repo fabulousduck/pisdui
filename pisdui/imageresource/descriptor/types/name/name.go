@@ -1,4 +1,4 @@
-package imageresource
+package name
 
 import (
 	"fmt"
