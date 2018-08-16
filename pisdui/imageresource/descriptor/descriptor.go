@@ -1,10 +1,8 @@
 package descriptor
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/fabulousduck/pisdui/pisdui/util"
 )
 
@@ -56,10 +54,6 @@ func (descriptor *Descriptor) Parse(file *os.File) {
 	for i = 0; i < descriptor.ItemCount; i++ {
 		descriptor.parseDescriptorItem(file)
 	}
-
-	spew.Dump(descriptor)
-	pos, _ := file.Seek(0, 1)
-	fmt.Println("pos after descriptor read: ", pos)
 }
 
 func (descriptor *Descriptor) parseDescriptorItem(file *os.File) {

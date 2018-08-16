@@ -23,3 +23,5 @@ debug
 
 #editor files
 .vscode
+
+main.go

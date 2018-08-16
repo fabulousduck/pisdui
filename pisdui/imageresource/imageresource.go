@@ -3,6 +3,8 @@ package imageresource
 import (
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
+
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor"
 	"github.com/fabulousduck/pisdui/pisdui/util"
 )
@@ -47,15 +49,18 @@ func (resourceBlockSection *Data) Parse(file *os.File) {
 	endPos := int(currPos) + int(resourceBlockSection.Length)
 
 	for p, _ := file.Seek(0, 1); int(p) < endPos; {
+		r := resourceBlockSection.parseResourceBlock(file)
 		resourceBlockSection.ResourceBlocks = append(
 			resourceBlockSection.ResourceBlocks,
-			resourceBlockSection.parseResourceBlock(file))
+			r)
+		spew.Dump(r)
+		if r.Signature != "8BIM" {
+			panic("non 8bim sig")
+		}
 	}
-
 }
 
 func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlock {
-	readByteCount := 0
 	block := new(ResourceBlock)
 	block.Signature = util.ReadBytesString(file, 4)
 
@@ -65,7 +70,6 @@ func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlo
 
 	block.PascalString = pascalString
 	block.DataSize = util.ReadBytesLong(file)
-	readByteCount += 4
 
 	block.ParsedResourceBlock = parseResourceBlock(file, block.ID)
 
