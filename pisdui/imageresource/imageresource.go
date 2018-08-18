@@ -3,6 +3,8 @@ package imageresource
 import (
 	"os"
 
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/info/resolutioninfo"
+
 	"github.com/davecgh/go-spew/spew"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor"
@@ -28,7 +30,6 @@ type ResourceBlock struct {
 	ID                  uint16
 	PascalString        string
 	DataSize            uint32
-	DataBlock           []byte
 	ParsedResourceBlock parsedResourceBlock
 }
 
@@ -87,8 +88,14 @@ func parseResourceBlock(file *os.File, id uint16) parsedResourceBlock {
 		descriptorObject.Parse(file)
 		p = descriptorObject
 		break
+	case 1005:
+		resolutioninfoObject := resolutioninfo.NewResolutionInfo()
+		resolutioninfoObject.Parse(file)
+		p = resolutioninfoObject
 	case 10000:
 		break
+	default:
+
 	}
 	return p
 }
