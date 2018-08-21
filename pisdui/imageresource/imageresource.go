@@ -3,6 +3,8 @@ package imageresource
 import (
 	"os"
 
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/printflags"
+
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/info/resolutioninfo"
 
 	"github.com/davecgh/go-spew/spew"
@@ -88,6 +90,10 @@ func parseResourceBlock(file *os.File, id uint16) parsedResourceBlock {
 		descriptorObject.Parse(file)
 		p = descriptorObject
 		break
+	case 1011:
+		printFlagsObject := printflags.NewPrintFlags()
+		printFlagsObject.Parse(file)
+		p = printFlagsObject
 	case 1005:
 		resolutioninfoObject := resolutioninfo.NewResolutionInfo()
 		resolutioninfoObject.Parse(file)

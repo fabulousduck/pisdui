@@ -1,7 +1,6 @@
 package resolutioninfo
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/util"
@@ -26,8 +25,6 @@ func NewResolutionInfo() *Resolutioninfo {
 }
 
 func (resolutioninfo *Resolutioninfo) Parse(file *os.File) {
-	pos, _ := file.Seek(0, 1)
-	fmt.Println("file pointer pos : ", pos)
 	resolutioninfo.HorizontalResolution = parseFixedPoint(util.ReadRawBytes(file, 4))
 	resolutioninfo.HorizontalResolutionUnit = parseUnit(util.ReadBytesShort(file))
 	resolutioninfo.WidthResolutionUnit = parseUnit(util.ReadBytesShort(file))
@@ -47,6 +44,7 @@ func parseUnit(unit uint16) string {
 	return opts[unit]
 }
 
+//This assumes the buffer is big endian
 func parseFixedPoint(buffer []byte) float32 {
 	var n float32
 	f := buffer[1] | buffer[1]<<8 | buffer[2]<<16
