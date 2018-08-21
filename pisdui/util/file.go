@@ -87,6 +87,16 @@ func ReadIntoArray16(file *os.File, length uint32) []uint16 {
 	return newBuffer
 }
 
+//ReadRawBytes returns a buffer containing length bytes at the current file pointer index
+func ReadRawBytes(file *os.File, length int) []byte {
+	buffer := make([]byte, length)
+	_, err := file.Read(buffer)
+	if err != nil {
+		panic(err)
+	}
+	return buffer
+}
+
 /*ParseUnicodeString parses a unicode string from the
 photoshop file into a string*/
 func ParseUnicodeString(file *os.File) string {
