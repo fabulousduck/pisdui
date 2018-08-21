@@ -9,12 +9,12 @@ import (
 
 //Note: HorizontalResolution and VerticalResolution are byte buffers as they are fixed point integers
 type Resolutioninfo struct {
-	HorizontalResolution     []byte
+	HorizontalResolution     float32
 	HorizontalResolutionUnit string
 	WidthResolutionUnit      string
-	VerticalResolution       []byte
+	VerticalResolution       float32
 	VerticalResolutionUnit   string
-	HeightUnit               uint16
+	HeightUnit               string
 }
 
 func (resolutioninfo *Resolutioninfo) GetTypeID() int {
@@ -28,12 +28,12 @@ func NewResolutionInfo() *Resolutioninfo {
 func (resolutioninfo *Resolutioninfo) Parse(file *os.File) {
 	pos, _ := file.Seek(0, 1)
 	fmt.Println("file pointer pos : ", pos)
-	resolutioninfo.HorizontalResolution = util.ReadRawBytes(file, 4)
+	resolutioninfo.HorizontalResolution = parseFixedPoint(util.ReadRawBytes(file, 4))
 	resolutioninfo.HorizontalResolutionUnit = parseUnit(util.ReadBytesShort(file))
 	resolutioninfo.WidthResolutionUnit = parseUnit(util.ReadBytesShort(file))
-	resolutioninfo.VerticalResolution = util.ReadRawBytes(file, 4)
+	resolutioninfo.VerticalResolution = parseFixedPoint(util.ReadRawBytes(file, 4))
 	resolutioninfo.VerticalResolutionUnit = parseUnit(util.ReadBytesShort(file))
-	resolutioninfo.HeightUnit = util.ReadBytesShort(file)
+	resolutioninfo.HeightUnit = parseUnit(util.ReadBytesShort(file))
 }
 
 func parseUnit(unit uint16) string {
@@ -45,4 +45,11 @@ func parseUnit(unit uint16) string {
 		5: "columns",
 	}
 	return opts[unit]
+}
+
+func parseFixedPoint(buffer []byte) float32 {
+	var n float32
+	f := buffer[1] | buffer[1]<<8 | buffer[2]<<16
+	n = float32(f) + float32(buffer[0])/100
+	return n
 }
