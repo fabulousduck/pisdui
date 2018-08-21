@@ -1,6 +1,7 @@
 package header
 
 import (
+	"errors"
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/util"
@@ -35,6 +36,22 @@ func (fh *Data) Parse(file *os.File) {
 	fh.readDimensions(file)
 	fh.readDepth(file)
 	fh.readColorMode(file)
+}
+
+func (fh *Data) Save(file *os.File) error {
+	err := fh.writeSignature(file)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (fh *Data) writeSignature(fp *os.File) error {
+	if len(fh.Signature) < 0 {
+		return errors.New("trying to write null header signature")
+	}
+	fp.WriteAt([]byte(fh.Signature), 0)
+	return nil
 }
 
 func (fh *Data) readSignature(file *os.File) {

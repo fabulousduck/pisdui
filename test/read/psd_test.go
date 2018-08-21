@@ -14,3 +14,11 @@ func TestPsdFileRead(t *testing.T) {
 	}
 	fmt.Println("successfull file read")
 }
+
+func TestPsdFileParse(t *testing.T) {
+	psd, err := pisdui.NewPSD("../files/test.psd")
+	if err != nil {
+		t.Error(err)
+	}
+	psd.Parse()
+}
