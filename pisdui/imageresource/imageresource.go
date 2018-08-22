@@ -1,10 +1,12 @@
 package imageresource
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/printflags"
 
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/info/printflaginfo"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/info/resolutioninfo"
 
 	"github.com/davecgh/go-spew/spew"
@@ -50,13 +52,16 @@ func (resourceBlockSection *Data) Parse(file *os.File) {
 
 	currPos, _ := file.Seek(0, 1)
 	endPos := int(currPos) + int(resourceBlockSection.Length)
-
-	for p, _ := file.Seek(0, 1); int(p) < endPos; {
+	fmt.Println("fuckign memes")
+	for int(currPos) < endPos {
+		fmt.Println("curr : ", currPos, " end : ", endPos)
 		r := resourceBlockSection.parseResourceBlock(file)
 		resourceBlockSection.ResourceBlocks = append(
 			resourceBlockSection.ResourceBlocks,
 			r)
 		spew.Dump(r)
+		pos, _ := file.Seek(0, 1)
+		currPos = pos
 		if r.Signature != "8BIM" {
 			panic("non 8bim sig")
 		}
@@ -74,7 +79,7 @@ func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlo
 	block.PascalString = pascalString
 	block.DataSize = util.ReadBytesLong(file)
 
-	block.ParsedResourceBlock = parseResourceBlock(file, block.ID)
+	block.ParsedResourceBlock = parseResourceBlock(file, block.ID, block.DataSize)
 
 	if block.DataSize%2 != 0 {
 		util.ReadSingleByte(file)
@@ -82,7 +87,7 @@ func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlo
 	return block
 }
 
-func parseResourceBlock(file *os.File, id uint16) parsedResourceBlock {
+func parseResourceBlock(file *os.File, id uint16, size uint32) parsedResourceBlock {
 	var p parsedResourceBlock
 	switch id {
 	case 1088:
@@ -99,9 +104,13 @@ func parseResourceBlock(file *os.File, id uint16) parsedResourceBlock {
 		resolutioninfoObject.Parse(file)
 		p = resolutioninfoObject
 	case 10000:
+		printFlagInfoObject := printflaginfo.NewPrintFlagInfo()
+		printFlagInfoObject.Parse(file)
+		p = printFlagInfoObject
 		break
 	default:
-
+		util.ReadBytesNInt(file, size)
+		break
 	}
 	return p
 }
