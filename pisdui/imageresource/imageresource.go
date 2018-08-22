@@ -1,15 +1,12 @@
 package imageresource
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/printflags"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/info/printflaginfo"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/info/resolutioninfo"
-
-	"github.com/davecgh/go-spew/spew"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor"
 	"github.com/fabulousduck/pisdui/pisdui/util"
@@ -52,14 +49,11 @@ func (resourceBlockSection *Data) Parse(file *os.File) {
 
 	currPos, _ := file.Seek(0, 1)
 	endPos := int(currPos) + int(resourceBlockSection.Length)
-	fmt.Println("fuckign memes")
 	for int(currPos) < endPos {
-		fmt.Println("curr : ", currPos, " end : ", endPos)
 		r := resourceBlockSection.parseResourceBlock(file)
 		resourceBlockSection.ResourceBlocks = append(
 			resourceBlockSection.ResourceBlocks,
 			r)
-		spew.Dump(r)
 		pos, _ := file.Seek(0, 1)
 		currPos = pos
 		if r.Signature != "8BIM" {
