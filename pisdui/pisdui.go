@@ -50,3 +50,13 @@ func (psd *PSD) Parse() *PSD {
 
 	return psd
 }
+
+//SaveNew saves the current PSD struct to a new .psd file
+func (psd *PSD) SaveNew(path string) error {
+	fp, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	psd.Header.Save(fp)
+	return nil
+}
