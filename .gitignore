@@ -25,3 +25,5 @@ debug
 .vscode
 
 main.go
+
+test/read/f.go
