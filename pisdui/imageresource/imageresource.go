@@ -50,13 +50,10 @@ func (resourceBlockSection *Data) Parse(file *os.File) {
 	currPos, _ := file.Seek(0, 1)
 	endPos := int(currPos) + int(resourceBlockSection.Length)
 	for int(currPos) < endPos {
-		r := resourceBlockSection.parseResourceBlock(file)
-		resourceBlockSection.ResourceBlocks = append(
-			resourceBlockSection.ResourceBlocks,
-			r)
+		resourceBlockSection.ResourceBlocks = append(resourceBlockSection.ResourceBlocks, resourceBlockSection.parseResourceBlock(file))
 		pos, _ := file.Seek(0, 1)
 		currPos = pos
-		if r.Signature != "8BIM" {
+		if resourceBlockSection.ResourceBlocks[len(resourceBlockSection.ResourceBlocks)-1].Signature != "8BIM" {
 			panic("non 8bim sig")
 		}
 	}

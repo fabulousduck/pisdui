@@ -1,14 +1,19 @@
 package layerandmask
 
-import "github.com/fabulousduck/pisdui/pisdui/layerandmask/layerinfo"
+import (
+	"os"
+
+	"github.com/fabulousduck/pisdui/pisdui/layerandmask/layerinfo"
+	"github.com/fabulousduck/pisdui/pisdui/util"
+)
 
 //Data contains the photoshop files
 //layers and their respective masks
 type Data struct {
 	Length                     uint32
-	LayerInfo                  layerinfo.LayerInfo
-	GlobalLayerMaskInfo        GlobalLayerMaskInfo
-	AdditionalLayerInformation AdditionalLayerInformation
+	LayerInfo                  *layerinfo.LayerInfo
+	GlobalLayerMaskInfo        *GlobalLayerMaskInfo
+	AdditionalLayerInformation *AdditionalLayerInformation
 }
 
 type GlobalLayerMaskInfo struct {
@@ -29,4 +34,15 @@ type AdditionalLayerInformation struct {
 
 type ADLIDataBlock interface {
 	GetTypeID() string
+}
+
+func NewData() *Data {
+	return new(Data)
+}
+
+func (layerandmaskobject *Data) Parse(file *os.File) {
+	layerandmaskobject.Length = util.ReadBytesLong(file)
+	layerInfoObject := layerinfo.NewLayerInfo()
+	layerInfoObject.Parse(file)
+	layerandmaskobject.LayerInfo = layerInfoObject
 }

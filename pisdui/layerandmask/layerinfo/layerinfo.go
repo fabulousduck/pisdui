@@ -1,6 +1,11 @@
 package layerinfo
 
-import "github.com/fabulousduck/pisdui/pisdui/layerandmask/layerrecord"
+import (
+	"os"
+
+	"github.com/fabulousduck/pisdui/pisdui/layerandmask/layerrecord"
+	"github.com/fabulousduck/pisdui/pisdui/util"
+)
 
 //LayerInfo contains information about
 //the layers in the .psd file
@@ -14,4 +19,13 @@ type LayerInfo struct {
 type ChannelImageData struct {
 	Compression uint16
 	ImageData   []byte
+}
+
+func NewLayerInfo() *LayerInfo {
+	return new(LayerInfo)
+}
+
+func (layerinfo *LayerInfo) Parse(file *os.File) {
+	layerinfo.Length = util.ReadBytesLong(file)
+	layerinfo.LayerCount = util.ReadBytesShort(file)
 }

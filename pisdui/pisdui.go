@@ -1,6 +1,7 @@
 package pisdui
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/colormode"
@@ -47,6 +48,13 @@ func (psd *PSD) Parse() *PSD {
 	imageResourceData := imageresource.NewData()
 	imageResourceData.Parse(psd.Fp)
 	psd.ImageResources = imageResourceData
+
+	f, _ := psd.Fp.Seek(0, 1)
+	fmt.Println(f)
+
+	layerAndMaskData := layerandmask.NewData()
+	layerAndMaskData.Parse(psd.Fp)
+	psd.LayerMaskInfo = layerAndMaskData
 
 	return psd
 }
