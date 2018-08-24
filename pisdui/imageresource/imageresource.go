@@ -1,6 +1,7 @@
 package imageresource
 
 import (
+	"errors"
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/printflags"
@@ -44,7 +45,7 @@ func NewData() *Data {
 
 /*Parse will read all image resources located in
 the photoshop file and will read them into the ImageResources struct*/
-func (resourceBlockSection *Data) Parse(file *os.File) {
+func (resourceBlockSection *Data) Parse(file *os.File) error {
 	resourceBlockSection.Length = util.ReadBytesLong(file)
 
 	currPos, _ := file.Seek(0, 1)
@@ -54,9 +55,10 @@ func (resourceBlockSection *Data) Parse(file *os.File) {
 		pos, _ := file.Seek(0, 1)
 		currPos = pos
 		if resourceBlockSection.ResourceBlocks[len(resourceBlockSection.ResourceBlocks)-1].Signature != "8BIM" {
-			panic("non 8bim sig")
+			return errors.New("non 8BIM signature")
 		}
 	}
+	return nil
 }
 
 func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlock {

@@ -36,7 +36,7 @@ func NewPSD(path string) (*PSD, error) {
 // Parse takes the loaded file and parses it into
 // usable structs separated into the different main
 // parts of the file
-func (psd *PSD) Parse() *PSD {
+func (psd *PSD) Parse() error {
 	h := header.NewData()
 	h.Parse(psd.Fp)
 	psd.Header = h
@@ -46,7 +46,10 @@ func (psd *PSD) Parse() *PSD {
 	psd.ColorModeData = colorModeData
 
 	imageResourceData := imageresource.NewData()
-	imageResourceData.Parse(psd.Fp)
+	err := imageResourceData.Parse(psd.Fp)
+	if err != nil {
+		return err
+	}
 	psd.ImageResources = imageResourceData
 
 	f, _ := psd.Fp.Seek(0, 1)
@@ -56,7 +59,7 @@ func (psd *PSD) Parse() *PSD {
 	layerAndMaskData.Parse(psd.Fp)
 	psd.LayerMaskInfo = layerAndMaskData
 
-	return psd
+	return nil
 }
 
 //SaveNew saves the current PSD struct to a new .psd file

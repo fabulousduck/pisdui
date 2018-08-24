@@ -20,5 +20,8 @@ func TestPsdFileParse(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	psd.Parse()
+	err = psd.Parse()
+	if err != nil {
+		panic(err)
+	}
 }
