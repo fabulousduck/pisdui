@@ -2,6 +2,7 @@ package imageresource
 
 import (
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/printflags"
@@ -17,16 +18,16 @@ type parsedResourceBlock interface {
 	GetTypeID() int
 }
 
-/*Data contains the resource blocks
-used by the photoshop file and the length of the
-section in the photoshop file*/
+//Data contains the resource blocks
+//used by the photoshop file and the length of the
+//section in the photoshop file
 type Data struct {
 	Length         uint32
 	ResourceBlocks []*ResourceBlock
 }
 
-/*ResourceBlock contains the raw unparsed data from
-a resource block in the photoshop file*/
+//ResourceBlock contains the raw unparsed data from
+//a resource block in the photoshop file
 type ResourceBlock struct {
 	Signature           string
 	ID                  uint16
@@ -35,16 +36,16 @@ type ResourceBlock struct {
 	ParsedResourceBlock parsedResourceBlock
 }
 
-/*NewData creates a new ImageResources struct
-and returns a pointer to it.
-This exists so the top level pisdui struct can create one
-to prevent import cycles*/
+//NewData creates a new ImageResources struct
+//and returns a pointer to it.
+//This exists so the top level pisdui struct can create one
+//to prevent import cycles
 func NewData() *Data {
 	return new(Data)
 }
 
-/*Parse will read all image resources located in
-the photoshop file and will read them into the ImageResources struct*/
+//Parse will read all image resources located in
+//the photoshop file and will read them into the ImageResources struct
 func (resourceBlockSection *Data) Parse(file *os.File) error {
 	resourceBlockSection.Length = util.ReadBytesLong(file)
 
@@ -58,6 +59,7 @@ func (resourceBlockSection *Data) Parse(file *os.File) error {
 			return errors.New("non 8BIM signature")
 		}
 	}
+	fmt.Println("pos after image resource block parsing : ", currPos)
 	return nil
 }
 
