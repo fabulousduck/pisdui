@@ -85,19 +85,32 @@ func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlo
 func parseResourceBlock(file *os.File, id uint16, size uint32) parsedResourceBlock {
 	var p parsedResourceBlock
 	switch id {
+	case 1005:
+		resolutioninfoObject := resolutioninfo.NewResolutionInfo()
+		resolutioninfoObject.Parse(file)
+		p = resolutioninfoObject
+	case 1011:
+		printFlagsObject := printflags.NewPrintFlags()
+		printFlagsObject.Parse(file)
+		p = printFlagsObject
+	case 1074:
+		fallthrough
+	case 1075:
+		fallthrough
+	case 1076:
+		fallthrough
+	case 1080:
+		fallthrough
+	case 1082:
+		fallthrough
+	case 1083:
+		fallthrough
 	case 1088:
 		descriptorObject := descriptor.NewDescriptor()
 		descriptorObject.Parse(file)
 		p = descriptorObject
 		break
-	case 1011:
-		printFlagsObject := printflags.NewPrintFlags()
-		printFlagsObject.Parse(file)
-		p = printFlagsObject
-	case 1005:
-		resolutioninfoObject := resolutioninfo.NewResolutionInfo()
-		resolutioninfoObject.Parse(file)
-		p = resolutioninfoObject
+
 	case 10000:
 		printFlagInfoObject := printflaginfo.NewPrintFlagInfo()
 		printFlagInfoObject.Parse(file)

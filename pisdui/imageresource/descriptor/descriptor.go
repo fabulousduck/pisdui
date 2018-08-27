@@ -3,10 +3,12 @@ package descriptor
 import (
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
+
 	"github.com/fabulousduck/pisdui/pisdui/util"
 )
 
-type osKeyBlock interface {
+type OsKeyBlock interface {
 	getOsKeyBlockID() string
 }
 
@@ -22,7 +24,7 @@ type Descriptor struct {
 type descriptorItem struct {
 	key        string
 	osTypeKey  string
-	osKeyBlock referenceOsKeyBlock
+	osKeyBlock OsKeyBlock
 }
 
 func (descriptor *Descriptor) GetTypeID() int {
@@ -41,19 +43,20 @@ func (descriptor *Descriptor) Parse(file *os.File) {
 	descriptor.UnicodeString = util.ParseUnicodeString(file)
 
 	classIDLength := util.ReadBytesLong(file)
+	spew.Dump(file.Seek(0, 1))
 
 	if classIDLength == 0 {
 		descriptor.ClassID = util.ReadBytesString(file, 4)
 	} else {
-		descriptor.ClassID = util.ParseUnicodeString(file)
+		descriptor.ClassID = util.ReadBytesString(file, int(classIDLength))
 	}
-
 	descriptor.ItemCount = util.ReadBytesLong(file)
 
 	var i uint32
 	for i = 0; i < descriptor.ItemCount; i++ {
 		descriptor.parseDescriptorItem(file)
 	}
+
 }
 
 func (descriptor *Descriptor) parseDescriptorItem(file *os.File) {
@@ -70,12 +73,13 @@ func (descriptor *Descriptor) parseDescriptorItem(file *os.File) {
 	descriptor.Items = append(descriptor.Items, descriptorItem)
 }
 
-func parseOsKeyType(file *os.File, osKeyID string) referenceOsKeyBlock {
-
-	var r referenceOsKeyBlock
+func parseOsKeyType(file *os.File, osKeyID string) OsKeyBlock {
+	spew.Dump(osKeyID)
+	var r OsKeyBlock
 	switch osKeyID {
 	case "obj ":
-		r = parseReferenceOsKeyType(file, osKeyID)
+		referenceObject := NewReference()
+		referenceObject.Parse(file)
 		break
 	case "Objc":
 		break
@@ -94,10 +98,12 @@ func parseOsKeyType(file *os.File, osKeyID string) referenceOsKeyBlock {
 	case "comp":
 		break
 	case "bool":
+
 		break
 	case "GlbO":
 		break
 	case "type": //type and GlbC are both of type class
+		fallthrough
 	case "GlbC":
 		break
 	case "alis":
