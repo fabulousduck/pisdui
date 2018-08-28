@@ -6,6 +6,7 @@ package descriptor
 import (
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/fabulousduck/pisdui/pisdui/util"
 )
 
@@ -55,12 +56,13 @@ func NewBool() *Bool {
 }
 
 func (Bool *Bool) Parse(file *os.File) {
-	Bool.Value = util.ReadSingleByte(file) == 1
+	Bool.Value = int(util.ReadSingleByte(file)) == 1
 }
 
 type Enum struct {
-	Type  string
-	Value string
+	Type            string
+	Value           string
+	AdditionalValue string //TODO: figure out what this is used for
 }
 
 func (enum Enum) getOsKeyBlockID() string {
@@ -72,6 +74,7 @@ func NewEnum() *Enum {
 }
 
 func (enum *Enum) Parse(file *os.File) {
+	spew.Dump(file.Seek(0, 1))
 	typeLength := util.ReadBytesLong(file)
 	if typeLength < 1 {
 		enum.Type = util.ReadBytesString(file, 4)
@@ -80,10 +83,16 @@ func (enum *Enum) Parse(file *os.File) {
 	}
 
 	enumLength := util.ReadBytesLong(file)
-	if enumLength < 0 {
+	if enumLength < 1 {
 		enum.Value = util.ReadBytesString(file, 4)
 	} else {
 		enum.Value = util.ReadBytesString(file, int(enumLength))
+	}
+	additionalValueLength := util.ReadBytesLong(file)
+	if additionalValueLength < 1 {
+		enum.AdditionalValue = util.ReadBytesString(file, 4)
+	} else {
+		enum.AdditionalValue = util.ReadBytesString(file, int(additionalValueLength))
 	}
 
 }
