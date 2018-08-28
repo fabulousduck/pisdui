@@ -41,3 +41,49 @@ func (referenceItem *ReferenceItem) Parse(file *os.File) {
 	referenceItem.OsTypeKey = util.ReadBytesString(file, 4)
 	referenceItem.OsKeyBlock = parseReferenceOsKeyBlock(file, referenceItem.OsTypeKey)
 }
+
+type Bool struct {
+	Value bool
+}
+
+func (Bool Bool) getOsKeyBlockID() string {
+	return "bool"
+}
+
+func NewBool() *Bool {
+	return new(Bool)
+}
+
+func (Bool *Bool) Parse(file *os.File) {
+	Bool.Value = util.ReadSingleByte(file) == 1
+}
+
+type Enum struct {
+	Type  string
+	Value string
+}
+
+func (enum Enum) getOsKeyBlockID() string {
+	return "enum"
+}
+
+func NewEnum() *Enum {
+	return new(Enum)
+}
+
+func (enum *Enum) Parse(file *os.File) {
+	typeLength := util.ReadBytesLong(file)
+	if typeLength < 1 {
+		enum.Type = util.ReadBytesString(file, 4)
+	} else {
+		enum.Type = util.ReadBytesString(file, int(typeLength))
+	}
+
+	enumLength := util.ReadBytesLong(file)
+	if enumLength < 0 {
+		enum.Value = util.ReadBytesString(file, 4)
+	} else {
+		enum.Value = util.ReadBytesString(file, int(enumLength))
+	}
+
+}

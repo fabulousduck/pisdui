@@ -1,7 +1,10 @@
 package descriptor
 
 import (
+	"fmt"
 	"os"
+
+	"github.com/davecgh/go-spew/spew"
 
 	"github.com/fabulousduck/pisdui/pisdui/util"
 )
@@ -15,6 +18,7 @@ func NewReferenceOsKeyBlock() *referenceOsKeyBlock {
 }
 
 func parseReferenceOsKeyBlock(file *os.File, osKeyID string) referenceOsKeyBlock {
+	fmt.Println("parsing referenceOSKeyBlock : ", osKeyID)
 	var r referenceOsKeyBlock
 	switch osKeyID {
 	case "prop":
@@ -39,8 +43,12 @@ func parseReferenceOsKeyBlock(file *os.File, osKeyID string) referenceOsKeyBlock
 		break
 	case "Idnt":
 		//TODO figure out by looking at hex map
+		fmt.Printf("idnt index : ")
+		spew.Dump(file.Seek(0, 1))
 		break
 	case "indx":
+		fmt.Printf("idx index : ")
+		spew.Dump(file.Seek(0, 1))
 		//TODO figure out by looking at hex map
 		break
 	case "name":

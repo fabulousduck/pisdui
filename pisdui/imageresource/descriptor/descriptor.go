@@ -92,13 +92,18 @@ func parseOsKeyType(file *os.File, osKeyID string) OsKeyBlock {
 	case "TEXT":
 		break
 	case "enum":
+		enumObject := NewEnum()
+		enumObject.Parse(file)
+		r = enumObject
 		break
 	case "long":
 		break
 	case "comp":
 		break
 	case "bool":
-
+		boolObject := NewBool()
+		boolObject.Parse(file)
+		r = boolObject
 		break
 	case "GlbO":
 		break
@@ -111,5 +116,6 @@ func parseOsKeyType(file *os.File, osKeyID string) OsKeyBlock {
 	case "tdta":
 		break
 	}
+	spew.Dump(r)
 	return r
 }
