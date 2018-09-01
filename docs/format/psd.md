@@ -46,6 +46,21 @@ The structure of a .psd file is devided into five sections
 | Colormode | variable | colormode of the file, see colormodes for possibilities| |
 
 ## Color mode data
+    The color mode data section here is only really important
+    when it is either "Indexed" or "Duotone". all other formats
+    have the no special data fields.
+
+    Not much is currently known how the .psd file format uses 
+    the `duotone` data field and not much description on it can
+    be found.
+
+
+
+| field | length | description | restricted value |
+|:-----:|:------:|:-----------:|:----------------:|
+|Length | 4 | length of the following data (0 if not indexed or duotone) | |
+|Palette | Length |  palette used by the .psd file | |
+|DuotoneData | Length | duotone data used by the .psd file | |
 
 ## Image resources
 
