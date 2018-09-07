@@ -60,9 +60,8 @@ func (Bool *Bool) Parse(file *os.File) {
 }
 
 type Enum struct {
-	Type            string
-	Value           string
-	AdditionalValue string //TODO: figure out what this is used for
+	Type  string
+	Value string
 }
 
 func (enum Enum) getOsKeyBlockID() string {
@@ -88,11 +87,21 @@ func (enum *Enum) Parse(file *os.File) {
 	} else {
 		enum.Value = util.ReadBytesString(file, int(enumLength))
 	}
-	additionalValueLength := util.ReadBytesLong(file)
-	if additionalValueLength < 1 {
-		enum.AdditionalValue = util.ReadBytesString(file, 4)
-	} else {
-		enum.AdditionalValue = util.ReadBytesString(file, int(additionalValueLength))
-	}
 
+}
+
+type Text struct {
+	Value string
+}
+
+func (text Text) getOsKeyBlockID() string {
+	return "TEXT"
+}
+
+func NewText() *Text {
+	return new(Text)
+}
+
+func (text *Text) Parse(file *os.File) {
+	text.Value = util.ParseUnicodeString(file)
 }

@@ -31,6 +31,10 @@ func (descriptor *Descriptor) GetTypeID() int {
 	return 1088
 }
 
+func (Descriptor Descriptor) getOsKeyBlockID() string {
+	return "objc"
+}
+
 /*NewDescriptor creates a new descriptor struct*/
 func NewDescriptor() *Descriptor {
 	return &Descriptor{}
@@ -65,7 +69,7 @@ func (descriptor *Descriptor) parseDescriptorItem(file *os.File) {
 	if length == 0 {
 		descriptorItem.key = util.ReadBytesString(file, 4)
 	} else {
-		descriptorItem.key = util.ParseUnicodeString(file)
+		descriptorItem.key = util.ReadBytesString(file, int(length))
 	}
 
 	descriptorItem.osTypeKey = util.ReadBytesString(file, 4)
@@ -82,6 +86,9 @@ func parseOsKeyType(file *os.File, osKeyID string) OsKeyBlock {
 		referenceObject.Parse(file)
 		break
 	case "Objc":
+		descriptorObject := NewDescriptor()
+		descriptorObject.Parse(file)
+		r = descriptorObject
 		break
 	case "VlLS":
 		break
@@ -90,6 +97,9 @@ func parseOsKeyType(file *os.File, osKeyID string) OsKeyBlock {
 	case "UntF":
 		break
 	case "TEXT":
+		textObject := NewText()
+		textObject.Parse(file)
+		r = textObject
 		break
 	case "enum":
 		enumObject := NewEnum()

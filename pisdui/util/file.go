@@ -7,6 +7,8 @@ import (
 	"unicode/utf16"
 )
 
+//TODO: make these return errors instead of panicing
+
 /*ReadBytesNInt reads length bytes into a new buffer
 and returns the result as a []byte
 */
