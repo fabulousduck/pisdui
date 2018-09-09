@@ -12,7 +12,7 @@ import (
 type LayerInfo struct {
 	Length           uint32
 	LayerCount       uint16
-	LayerRecords     []layerrecord.LayerRecord
+	LayerRecords     []*layerrecord.LayerRecord
 	ChannelImageData ChannelImageData
 }
 
@@ -28,4 +28,7 @@ func NewLayerInfo() *LayerInfo {
 func (layerinfo *LayerInfo) Parse(file *os.File) {
 	layerinfo.Length = util.ReadBytesLong(file)
 	layerinfo.LayerCount = util.ReadBytesShort(file)
+	newLayerObject := layerrecord.NewLayerRecord()
+	newLayerObject.Parse(file)
+	layerinfo.LayerRecords = append(layerinfo.LayerRecords, newLayerObject)
 }
