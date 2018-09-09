@@ -1,6 +1,7 @@
 package descriptor
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/davecgh/go-spew/spew"
@@ -43,11 +44,9 @@ func NewDescriptor() *Descriptor {
 /*Parse parses data from a descriptor block in a PSD file into a premade descriptor*/
 func (descriptor *Descriptor) Parse(file *os.File) {
 
-	descriptor.Version = util.ReadBytesLong(file)
 	descriptor.UnicodeString = util.ParseUnicodeString(file)
 
 	classIDLength := util.ReadBytesLong(file)
-	spew.Dump(file.Seek(0, 1))
 
 	if classIDLength == 0 {
 		descriptor.ClassID = util.ReadBytesString(file, 4)
@@ -88,11 +87,21 @@ func parseOsKeyType(file *os.File, osKeyID string) OsKeyBlock {
 	case "Objc":
 		descriptorObject := NewDescriptor()
 		descriptorObject.Parse(file)
+		fmt.Printf("------------------------------------------\n")
+		spew.Dump(descriptorObject)
+		fmt.Printf("------------------------------------------\n")
 		r = descriptorObject
 		break
 	case "VlLS":
 		break
 	case "doub":
+		doubleObject := NewDouble()
+		err := doubleObject.Parse(file)
+		if err != nil {
+			//return this error properly
+			panic(err)
+		}
+		r = doubleObject
 		break
 	case "UntF":
 		break

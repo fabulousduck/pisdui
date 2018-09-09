@@ -105,3 +105,25 @@ func NewText() *Text {
 func (text *Text) Parse(file *os.File) {
 	text.Value = util.ParseUnicodeString(file)
 }
+
+type Double struct {
+	Value float64
+}
+
+func (double Double) getOsKeyBlockID() string {
+	return "doub"
+}
+
+func NewDouble() *Double {
+	return new(Double)
+}
+
+func (double *Double) Parse(file *os.File) error {
+	value, err := util.ReadDouble(file)
+	if err != nil {
+		return err
+	}
+	double.Value = value
+	return nil
+
+}

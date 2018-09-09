@@ -106,8 +106,10 @@ func parseResourceBlock(file *os.File, id uint16, size uint32) parsedResourceBlo
 	case 1083:
 		fallthrough
 	case 1088:
+		descriptorVersion := util.ReadBytesLong(file)
 		descriptorObject := descriptor.NewDescriptor()
 		descriptorObject.Parse(file)
+		descriptorObject.Version = descriptorVersion
 		p = descriptorObject
 		break
 

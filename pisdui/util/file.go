@@ -1,6 +1,7 @@
 package util
 
 import (
+	"bytes"
 	"encoding/binary"
 	"fmt"
 	"os"
@@ -130,4 +131,17 @@ func ParsePascalString(file *os.File) string {
 		ReadSingleByte(file)
 	}
 	return s
+}
+
+/*ReadDouble reads a 64bit int*/
+func ReadDouble(file *os.File) (float64, error) {
+	buffer := make([]byte, 8)
+	_, err := file.Read(buffer)
+	if err != nil {
+		return 0, err
+	}
+	reader := bytes.NewReader(buffer)
+	var res float64
+	binary.Read(reader, binary.BigEndian, &res)
+	return res, nil
 }
