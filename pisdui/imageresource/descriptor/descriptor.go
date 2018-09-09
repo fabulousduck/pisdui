@@ -98,12 +98,19 @@ func parseOsKeyType(file *os.File, osKeyID string) OsKeyBlock {
 		doubleObject := NewDouble()
 		err := doubleObject.Parse(file)
 		if err != nil {
-			//return this error properly
+			//TODO: return this error properly
 			panic(err)
 		}
 		r = doubleObject
 		break
 	case "UntF":
+		unitFloatObject := NewUnitFloat()
+		err := unitFloatObject.Parse(file)
+		if err != nil {
+			//TODO: return this error properly
+			panic(err)
+		}
+		r = unitFloatObject
 		break
 	case "TEXT":
 		textObject := NewText()
@@ -116,6 +123,9 @@ func parseOsKeyType(file *os.File, osKeyID string) OsKeyBlock {
 		r = enumObject
 		break
 	case "long":
+		integerObject := NewInteger()
+		integerObject.Parse(file)
+		r = integerObject
 		break
 	case "comp":
 		break

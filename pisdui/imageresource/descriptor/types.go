@@ -127,3 +127,42 @@ func (double *Double) Parse(file *os.File) error {
 	return nil
 
 }
+
+type Unitfloat struct {
+	UnitType string
+	value    float64
+}
+
+func (unitFloat Unitfloat) getOsKeyBlockID() string {
+	return "UntF"
+}
+
+func NewUnitFloat() *Unitfloat {
+	return new(Unitfloat)
+}
+
+func (unitFloat *Unitfloat) Parse(file *os.File) error {
+	unitFloat.UnitType = util.ReadBytesString(file, 4)
+	double, err := util.ReadDouble(file)
+	if err == nil {
+		return err
+	}
+	unitFloat.value = double
+	return nil
+}
+
+type Integer struct {
+	Value uint32
+}
+
+func (integer Integer) getOsKeyBlockID() string {
+	return "long"
+}
+
+func NewInteger() *Integer {
+	return new(Integer)
+}
+
+func (integer *Integer) Parse(file *os.File) {
+	integer.Value = util.ReadBytesLong(file)
+}
