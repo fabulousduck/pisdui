@@ -56,7 +56,10 @@ func parseReferenceOsKeyBlock(file *os.File, osKeyID string) referenceOsKeyBlock
 		name.Parse(file)
 		r = name
 		break
+	default:
+		panic("undefined type")
 	}
+
 	return r
 }
 

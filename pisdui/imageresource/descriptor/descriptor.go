@@ -1,7 +1,6 @@
 package descriptor
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/davecgh/go-spew/spew"
@@ -87,9 +86,7 @@ func parseOsKeyType(file *os.File, osKeyID string) OsKeyBlock {
 	case "Objc":
 		descriptorObject := NewDescriptor()
 		descriptorObject.Parse(file)
-		fmt.Printf("------------------------------------------\n")
 		spew.Dump(descriptorObject)
-		fmt.Printf("------------------------------------------\n")
 		r = descriptorObject
 		break
 	case "VlLS":
