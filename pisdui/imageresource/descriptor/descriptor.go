@@ -5,7 +5,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 
-	"github.com/fabulousduck/pisdui/pisdui/util"
+	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
 type OsKeyBlock interface {

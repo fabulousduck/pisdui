@@ -6,7 +6,7 @@ import (
 	"github.com/fabulousduck/pisdui/pisdui/layerandmask/layerrecord/channelinfo"
 	"github.com/fabulousduck/pisdui/pisdui/layerandmask/layerrecord/layerblendingranges"
 	"github.com/fabulousduck/pisdui/pisdui/layerandmask/layerrecord/layermaskdata"
-	"github.com/fabulousduck/pisdui/pisdui/util"
+	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
 //LayerRecord represents a layer in

@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/layerandmask/layerinfo"
-	"github.com/fabulousduck/pisdui/pisdui/util"
+	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
 //Data contains the photoshop files

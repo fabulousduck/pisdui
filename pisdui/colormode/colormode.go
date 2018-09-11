@@ -3,7 +3,7 @@ package colormode
 import (
 	"os"
 
-	"github.com/fabulousduck/pisdui/pisdui/util"
+	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
 /*Data contains data related to the files colors mode

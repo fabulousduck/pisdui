@@ -3,7 +3,7 @@ package resolutioninfo
 import (
 	"os"
 
-	"github.com/fabulousduck/pisdui/pisdui/util"
+	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
 //Note: HorizontalResolution and VerticalResolution are byte buffers as they are fixed point integers

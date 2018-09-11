@@ -1,6 +1,10 @@
 package slice
 
-import "os"
+import (
+	"os"
+
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor"
+)
 
 type HeaderInterface interface {
 	GetHeaderVersion() uint16
@@ -12,11 +16,15 @@ type Slice struct {
 }
 
 type HeaderCS6 struct {
+	Version           uint32
+	DescriptorVersion uint32
+	Descriptor        *descriptor.Descriptor
 }
 
-//this is for both CS7 and CS8.
+//HeaderCS7 is for both CS7 and CS8.
 //it is denoted to 7 since that changes from 6, where 7 and 8 are the same
 type HeaderCS7 struct {
+	Version uint32
 }
 
 type Block struct {

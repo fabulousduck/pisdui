@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/layerandmask/layerrecord"
-	"github.com/fabulousduck/pisdui/pisdui/util"
+	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
 //LayerInfo contains information about

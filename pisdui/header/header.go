@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/fabulousduck/pisdui/pisdui/util"
+	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
 /*Data contains all header information

@@ -11,7 +11,7 @@ import (
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/info/resolutioninfo"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor"
-	"github.com/fabulousduck/pisdui/pisdui/util"
+	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
 type parsedResourceBlock interface {

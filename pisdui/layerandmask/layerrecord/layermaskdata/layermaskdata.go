@@ -3,7 +3,7 @@ package layermaskdata
 import (
 	"os"
 
-	"github.com/fabulousduck/pisdui/pisdui/util"
+	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
 type LayerMaskData struct {
