@@ -20,5 +20,4 @@ psd file interpreter in go
 
 # Todo
 
-- [ ] make reading functions for little endian and big endian
 - [x] make complete guide for the psd file format as its kinda janky right now
