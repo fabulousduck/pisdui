@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/printflags"
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/printscale"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/info/printflaginfo"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/info/resolutioninfo"
@@ -93,6 +94,10 @@ func parseResourceBlock(file *os.File, id uint16, size uint32) parsedResourceBlo
 		printFlagsObject := printflags.NewPrintFlags()
 		printFlagsObject.Parse(file)
 		p = printFlagsObject
+	case 1062:
+		printScaleObject := printscale.NewPrintScale()
+		printScaleObject.Parse(file)
+		p = printScaleObject
 	case 1074:
 		fallthrough
 	case 1075:

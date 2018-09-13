@@ -145,3 +145,16 @@ func ReadDouble(file *os.File) (float64, error) {
 	binary.Read(reader, binary.BigEndian, &res)
 	return res, nil
 }
+
+/*ReadFloat reads 4bytes into a float*/
+func ReadFloat(file *os.File) float32 {
+	buffer := make([]byte, 4)
+	_, err := file.Read(buffer)
+	if err != nil {
+		return 0
+	}
+	reader := bytes.NewReader(buffer)
+	var res float32
+	binary.Read(reader, binary.BigEndian, &res)
+	return res
+}
