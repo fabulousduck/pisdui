@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/backgroundcolor"
+
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/printflags"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/printscale"
 
@@ -90,6 +92,10 @@ func parseResourceBlock(file *os.File, id uint16, size uint32) parsedResourceBlo
 		resolutioninfoObject := resolutioninfo.NewResolutionInfo()
 		resolutioninfoObject.Parse(file)
 		p = resolutioninfoObject
+	case 1010:
+		backgroundColorObject := backgroundcolor.NewBackgroundColor()
+		backgroundColorObject.Parse(file)
+		p = backgroundColorObject
 	case 1011:
 		printFlagsObject := printflags.NewPrintFlags()
 		printFlagsObject.Parse(file)

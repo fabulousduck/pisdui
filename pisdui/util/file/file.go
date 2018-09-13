@@ -90,6 +90,19 @@ func ReadIntoArray16(file *os.File, length uint32) []uint16 {
 	return newBuffer
 }
 
+/*ReadIntoArray8 takes a []byte and creates a new slice containing the values in uint8 form*/
+func ReadIntoArray8(file *os.File, length uint32) []uint8 {
+
+	newBufferLength := length / 2
+	newBuffer := make([]uint8, newBufferLength)
+	var i uint32
+	for i = 0; i < newBufferLength; i++ {
+		newBuffer = append(newBuffer, uint8(ReadSingleByte(file)))
+	}
+
+	return newBuffer
+}
+
 //ReadRawBytes returns a buffer containing length bytes at the current file pointer index
 func ReadRawBytes(file *os.File, length int) []byte {
 	buffer := make([]byte, length)
