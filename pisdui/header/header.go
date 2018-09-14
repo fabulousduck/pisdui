@@ -20,7 +20,7 @@ type Data struct {
 	ColorMode string
 }
 
-/*NewFileHeader creates and returns a pointer
+/*NewData creates and returns a pointer
 to a new FileHeader struct*/
 func NewData() *Data {
 	return new(Data)

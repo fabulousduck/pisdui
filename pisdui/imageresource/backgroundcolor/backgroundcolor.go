@@ -8,7 +8,7 @@ import (
 
 type BackgroundColor struct {
 	ColorSpaceId string
-	ColorData    []uint8
+	ColorData    []uint16
 }
 
 func (backgroundColor *BackgroundColor) GetTypeID() int {
@@ -20,8 +20,14 @@ func NewBackgroundColor() *BackgroundColor {
 }
 
 func (backgroundColor *BackgroundColor) Parse(file *os.File) {
+	pixelDataLength := 4
+	intBuffer := make([]uint16, pixelDataLength)
+
 	backgroundColor.parseColorSpaceID(file)
-	backgroundColor.ColorData = util.ReadIntoArray8(file, 4)
+	for i := 0; i < pixelDataLength; i++ {
+		intBuffer = append(intBuffer, util.ReadBytesShort(file))
+	}
+	backgroundColor.ColorData = intBuffer
 }
 
 func (backgroundcolor *BackgroundColor) parseColorSpaceID(file *os.File) {
