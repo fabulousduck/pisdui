@@ -21,11 +21,12 @@ func NewBackgroundColor() *BackgroundColor {
 
 func (backgroundColor *BackgroundColor) Parse(file *os.File) {
 	pixelDataLength := 4
-	intBuffer := make([]uint16, pixelDataLength)
+	intBuffer := make([]uint16, 0, pixelDataLength)
 
 	backgroundColor.parseColorSpaceID(file)
 	for i := 0; i < pixelDataLength; i++ {
 		intBuffer = append(intBuffer, util.ReadBytesShort(file))
+		// spew.Dump(intBuffer)
 	}
 	backgroundColor.ColorData = intBuffer
 }
