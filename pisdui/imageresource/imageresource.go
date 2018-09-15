@@ -14,6 +14,7 @@ import (
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/info/printflaginfo"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/info/resolutioninfo"
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/info/version"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor"
 	util "github.com/fabulousduck/pisdui/pisdui/util/file"
@@ -102,6 +103,10 @@ func parseResourceBlock(file *os.File, id uint16, size uint32) parsedResourceBlo
 		printFlagsObject := printflags.NewPrintFlags()
 		printFlagsObject.Parse(file)
 		p = printFlagsObject
+	case 1057:
+		versionObject := version.NewVersion()
+		versionObject.Parse(file)
+		p = versionObject
 	case 1062:
 		printScaleObject := printscale.NewPrintScale()
 		printScaleObject.Parse(file)
