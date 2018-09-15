@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/backgroundcolor"
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/measurementscale"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/pixelaspectratio"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/printflags"
@@ -110,6 +111,9 @@ func parseResourceBlock(file *os.File, id uint16, size uint32) parsedResourceBlo
 		pixelAspectRatioObject.Parse(file)
 		p = pixelAspectRatioObject
 	case 1074:
+		measurementScaleObject := measurementscale.NewMeasurementScale()
+		measurementScaleObject.Parse(file)
+		p = measurementScaleObject
 		fallthrough
 	case 1075:
 		fallthrough
