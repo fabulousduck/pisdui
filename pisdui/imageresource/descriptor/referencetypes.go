@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/davecgh/go-spew/spew"
-
 	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
@@ -44,11 +42,9 @@ func parseReferenceOsKeyBlock(file *os.File, osKeyID string) referenceOsKeyBlock
 	case "Idnt":
 		//TODO figure out by looking at hex map
 		fmt.Printf("idnt index : ")
-		spew.Dump(file.Seek(0, 1))
 		break
 	case "indx":
 		fmt.Printf("idx index : ")
-		spew.Dump(file.Seek(0, 1))
 		//TODO figure out by looking at hex map
 		break
 	case "name":

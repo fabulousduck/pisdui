@@ -38,6 +38,10 @@ type Block struct {
 	Descriptor          *descriptor.Descriptor
 }
 
+func (slice *Slice) GetTypeID() int {
+	return 1050
+}
+
 func NewSlice() *Slice {
 	return new(Slice)
 }
@@ -47,5 +51,23 @@ func (slice *Slice) Parse(file *os.File) {
 	headerVersion := util.ReadBytesLong(file)
 	header := header.ParseHeader(file, headerVersion)
 	sliceObject.Header = header
+
+	switch headerVersion {
+	case 6:
+
+		break
+	case 7:
+		fallthrough
+	case 8:
+		//TODO: find a psd file that uses this and implement this
+		break
+	}
+}
+
+func NewBlock() *Block {
+	return new(Block)
+}
+
+func (block *Block) Parse(file *os.File) {
 
 }

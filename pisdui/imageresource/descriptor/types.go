@@ -6,7 +6,6 @@ package descriptor
 import (
 	"os"
 
-	"github.com/davecgh/go-spew/spew"
 	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
@@ -73,7 +72,6 @@ func NewEnum() *Enum {
 }
 
 func (enum *Enum) Parse(file *os.File) {
-	spew.Dump(file.Seek(0, 1))
 	typeLength := util.ReadBytesLong(file)
 	if typeLength < 1 {
 		enum.Type = util.ReadBytesString(file, 4)

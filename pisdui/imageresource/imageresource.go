@@ -8,6 +8,7 @@ import (
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/backgroundcolor"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/measurementscale"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/pixelaspectratio"
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/slice"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/printflags"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/printscale"
@@ -103,6 +104,10 @@ func parseResourceBlock(file *os.File, id uint16, size uint32) parsedResourceBlo
 		printFlagsObject := printflags.NewPrintFlags()
 		printFlagsObject.Parse(file)
 		p = printFlagsObject
+	case 1050:
+		sliceObject := slice.NewSlice()
+		sliceObject.Parse(file)
+		p = sliceObject
 	case 1057:
 		versionObject := version.NewVersion()
 		versionObject.Parse(file)

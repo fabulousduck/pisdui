@@ -24,7 +24,6 @@ func NewCS6Header() *HeaderCS6 {
 
 func (header *HeaderCS6) Parse(file *os.File) {
 	rectangleObject := shape.NewRectangle()
-	header.Version = util.ReadBytesLong(file)
 	rectangleObject.Parse(file)
 	header.BoundingRectangle = rectangleObject
 	header.GroupName = util.ParseUnicodeString(file)

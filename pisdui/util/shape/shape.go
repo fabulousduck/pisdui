@@ -19,4 +19,7 @@ func NewRectangle() *Rectangle {
 
 func (rectangle *Rectangle) Parse(file *os.File) {
 	rectangle.Top = util.ReadBytesLong(file)
+	rectangle.Left = util.ReadBytesLong(file)
+	rectangle.Bottom = util.ReadBytesLong(file)
+	rectangle.Right = util.ReadBytesLong(file)
 }

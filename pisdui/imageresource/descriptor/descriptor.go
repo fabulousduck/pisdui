@@ -3,8 +3,6 @@ package descriptor
 import (
 	"os"
 
-	"github.com/davecgh/go-spew/spew"
-
 	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
@@ -76,7 +74,6 @@ func (descriptor *Descriptor) parseDescriptorItem(file *os.File) {
 }
 
 func parseOsKeyType(file *os.File, osKeyID string) OsKeyBlock {
-	spew.Dump(osKeyID)
 	var r OsKeyBlock
 	switch osKeyID {
 	case "obj ":
@@ -86,7 +83,6 @@ func parseOsKeyType(file *os.File, osKeyID string) OsKeyBlock {
 	case "Objc":
 		descriptorObject := NewDescriptor()
 		descriptorObject.Parse(file)
-		spew.Dump(descriptorObject)
 		r = descriptorObject
 		break
 	case "VlLS":
@@ -142,6 +138,5 @@ func parseOsKeyType(file *os.File, osKeyID string) OsKeyBlock {
 	case "tdta":
 		break
 	}
-	spew.Dump(r)
 	return r
 }
