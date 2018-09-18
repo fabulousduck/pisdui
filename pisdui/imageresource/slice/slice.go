@@ -4,16 +4,14 @@ import (
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor"
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/slice/header"
+	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 	"github.com/fabulousduck/pisdui/pisdui/util/shape"
 )
 
-type HeaderInterface interface {
-	GetHeaderVersion() uint16
-}
-
 type Slice struct {
-	Header *HeaderInterface
-	Block  []*Block
+	Header *header.HeaderInterface
+	Block  *[]Block
 }
 
 type Block struct {
@@ -45,5 +43,9 @@ func NewSlice() *Slice {
 }
 
 func (slice *Slice) Parse(file *os.File) {
-	header := new(header)
+	sliceObject := new(Slice)
+	headerVersion := util.ReadBytesLong(file)
+	header := header.ParseHeader(file, headerVersion)
+	sliceObject.Header = header
+
 }
