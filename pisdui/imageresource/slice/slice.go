@@ -13,7 +13,7 @@ import (
 
 type Slice struct {
 	Header *header.HeaderInterface
-	Block  *[]Block
+	Blocks []*Block
 }
 
 type Block struct {
@@ -51,18 +51,17 @@ func NewSlice() *Slice {
 func (slice *Slice) Parse(file *os.File) {
 	sliceObject := new(Slice)
 	headerVersion := util.ReadBytesLong(file)
-	header := header.ParseHeader(file, headerVersion)
-	sliceObject.Header = header
+	sliceObject.Header = header.ParseHeader(file, headerVersion)
 
 	switch headerVersion {
 	case 6:
-		//TODO: debug why this runs into an EOF
-		//probably something todo with offset being incorrect
-		//when reading beginsS
-		spew.Dump(file.Seek(0, 1))
-		blockObject := NewBlock()
-		blockObject.Parse(file)
-		spew.Dump(blockObject)
+		headerObject := header.CastBackCS6(*sliceObject.Header)
+		for i := 0; i < int(headerObject.NumSlices); i++ {
+			block := NewBlock()
+			block.Parse(file)
+			sliceObject.Blocks = append(sliceObject.Blocks, block)
+			spew.Dump(block)
+		}
 		break
 	case 7:
 		fallthrough

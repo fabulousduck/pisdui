@@ -28,3 +28,23 @@ func ParseHeader(file *os.File, version uint32) *HeaderInterface {
 	}
 	return &header
 }
+
+func (headerCS6 HeaderCS6) GetHeaderVersion() uint16 {
+	return 6
+}
+
+func (headerCS7 HeaderCS7) GetHeaderVersion() uint16 {
+	return 7
+}
+
+/*
+	castBackCS6 and castBackCS7 are done here to prevent cyclic
+	imports in the header packages
+*/
+func CastBackCS6(headerInterface HeaderInterface) HeaderCS6 {
+	return headerInterface.(HeaderCS6)
+}
+
+func CastBackCS7(headerInterface HeaderInterface) HeaderCS7 {
+	return headerInterface.(HeaderCS7)
+}

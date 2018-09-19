@@ -14,10 +14,6 @@ type HeaderCS6 struct {
 	NumSlices         uint32
 }
 
-func (headerCS6 HeaderCS6) GetHeaderVersion() uint16 {
-	return 6
-}
-
 func NewCS6Header() *HeaderCS6 {
 	return new(HeaderCS6)
 }

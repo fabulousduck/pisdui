@@ -15,10 +15,6 @@ type HeaderCS7 struct {
 	Descriptor        *descriptor.Descriptor
 }
 
-func (headerCS7 HeaderCS7) GetHeaderVersion() uint16 {
-	return 7
-}
-
 func NewCS7Header() *HeaderCS7 {
 	return new(HeaderCS7)
 }
