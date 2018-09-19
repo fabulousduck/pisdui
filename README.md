@@ -20,4 +20,4 @@ psd file interpreter in go
 
 # Todo
 
-- [x] make complete guide for the psd file format as its kinda janky right now
+See issues
