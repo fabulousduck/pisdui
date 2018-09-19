@@ -85,7 +85,10 @@ func parseOsKeyType(file *os.File, osKeyID string) OsKeyBlock {
 		descriptorObject.Parse(file)
 		r = descriptorObject
 		break
-	case "VlLS":
+	case "VlLs":
+		listObject := NewList()
+		listObject.Parse(file)
+		r = listObject
 		break
 	case "doub":
 		doubleObject := NewDouble()
@@ -139,4 +142,26 @@ func parseOsKeyType(file *os.File, osKeyID string) OsKeyBlock {
 		break
 	}
 	return r
+}
+
+//List is defined here to prevent cyclic imports to types.go
+type List struct {
+	NumItems uint32
+	Items    []OsKeyBlock
+}
+
+func (list List) getOsKeyBlockID() string {
+	return "VlLs"
+}
+
+func NewList() *List {
+	return new(List)
+}
+
+func (list *List) Parse(file *os.File) {
+	list.NumItems = util.ReadBytesLong(file)
+	for i := 0; i < int(list.NumItems); i++ {
+		listItemType := util.ReadBytesString(file, 4)
+		list.Items = append(list.Items, parseOsKeyType(file, listItemType))
+	}
 }

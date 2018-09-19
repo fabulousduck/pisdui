@@ -78,7 +78,7 @@ func NewBlock() *Block {
 
 func (block *Block) Parse(file *os.File) {
 	dimensionsObject := shape.NewRectangle()
-	// descriptorObject := descriptor.NewDescriptor()
+	descriptorObject := descriptor.NewDescriptor()
 	block.ID = util.ReadBytesLong(file)
 	block.GroupID = util.ReadBytesLong(file)
 	block.Origin = util.ReadBytesLong(file)
@@ -95,18 +95,18 @@ func (block *Block) Parse(file *os.File) {
 	block.Url = util.ParseUnicodeString(file)
 	block.Target = util.ParseUnicodeString(file)
 	block.Message = util.ParseUnicodeString(file)
-	// block.AltTag = util.ParseUnicodeString(file)
-	// block.CellTextIsHTML = util.ReadSingleByte(file) == 1
-	// block.CellText = util.ParseUnicodeString(file)
-	// block.HorizontalAlignment = util.ReadBytesLong(file)
-	// block.VerticalAlignment = util.ReadBytesLong(file)
-	// block.AlphaColor = util.ReadSingleByte(file)
-	// block.Red = util.ReadSingleByte(file)
-	// block.Green = util.ReadSingleByte(file)
-	// block.Blue = util.ReadSingleByte(file)
-	// block.DescriptorVersion = util.ReadBytesLong(file)
+	block.AltTag = util.ParseUnicodeString(file)
+	block.CellTextIsHTML = util.ReadSingleByte(file) == 1
+	block.CellText = util.ParseUnicodeString(file)
+	block.HorizontalAlignment = util.ReadBytesLong(file)
+	block.VerticalAlignment = util.ReadBytesLong(file)
+	block.AlphaColor = util.ReadSingleByte(file)
+	block.Red = util.ReadSingleByte(file)
+	block.Green = util.ReadSingleByte(file)
+	block.Blue = util.ReadSingleByte(file)
+	block.DescriptorVersion = util.ReadBytesLong(file)
 
-	// descriptorObject.Parse(file)
+	descriptorObject.Parse(file)
 
-	// block.Descriptor = descriptorObject
+	block.Descriptor = descriptorObject
 }
