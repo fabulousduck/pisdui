@@ -52,6 +52,7 @@ func (slice *Slice) Parse(file *os.File) {
 	sliceObject := new(Slice)
 	headerVersion := util.ReadBytesLong(file)
 	sliceObject.Header = header.ParseHeader(file, headerVersion)
+	spew.Dump(sliceObject.Header)
 
 	switch headerVersion {
 	case 6:
@@ -78,20 +79,22 @@ func NewBlock() *Block {
 func (block *Block) Parse(file *os.File) {
 	dimensionsObject := shape.NewRectangle()
 	// descriptorObject := descriptor.NewDescriptor()
-
 	block.ID = util.ReadBytesLong(file)
 	block.GroupID = util.ReadBytesLong(file)
 	block.Origin = util.ReadBytesLong(file)
-	block.AssocLayerID = util.ReadBytesLong(file)
+	if block.Origin == 1 {
+		block.AssocLayerID = util.ReadBytesLong(file)
+	}
 	block.Name = util.ParseUnicodeString(file)
 	block.Type = util.ReadBytesLong(file)
 
-	dimensionsObject.Parse(file)
+	dimensionsObject.ParseSliceFormat(file)
 
 	block.Dimensions = dimensionsObject
-	// block.Url = util.ParseUnicodeString(file)
-	// block.Target = util.ParseUnicodeString(file)
-	// block.Message = util.ParseUnicodeString(file)
+
+	block.Url = util.ParseUnicodeString(file)
+	block.Target = util.ParseUnicodeString(file)
+	block.Message = util.ParseUnicodeString(file)
 	// block.AltTag = util.ParseUnicodeString(file)
 	// block.CellTextIsHTML = util.ReadSingleByte(file) == 1
 	// block.CellText = util.ParseUnicodeString(file)

@@ -23,3 +23,10 @@ func (rectangle *Rectangle) Parse(file *os.File) {
 	rectangle.Bottom = util.ReadBytesLong(file)
 	rectangle.Right = util.ReadBytesLong(file)
 }
+
+func (rectangle *Rectangle) ParseSliceFormat(file *os.File) {
+	rectangle.Left = util.ReadBytesLong(file)
+	rectangle.Top = util.ReadBytesLong(file)
+	rectangle.Right = util.ReadBytesLong(file)
+	rectangle.Bottom = util.ReadBytesLong(file)
+}
