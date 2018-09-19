@@ -12,7 +12,10 @@ psd file interpreter in go
 
     func main() {
 
-        psd := pisdui.NewPSD("./psd/test.psd")
+        psd, err := pisdui.NewPSD("./psd/test.psd")
+        if err != nil {
+            panic(err)
+        }
         psd.Parse()
     }
 
