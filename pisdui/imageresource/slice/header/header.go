@@ -41,10 +41,10 @@ func (headerCS7 HeaderCS7) GetHeaderVersion() uint16 {
 	castBackCS6 and castBackCS7 are done here to prevent cyclic
 	imports in the header packages
 */
-func CastBackCS6(headerInterface HeaderInterface) HeaderCS6 {
-	return headerInterface.(HeaderCS6)
+func CastBackCS6(headerInterface HeaderInterface) *HeaderCS6 {
+	return headerInterface.(*HeaderCS6)
 }
 
-func CastBackCS7(headerInterface HeaderInterface) HeaderCS7 {
-	return headerInterface.(HeaderCS7)
+func CastBackCS7(headerInterface HeaderInterface) *HeaderCS7 {
+	return headerInterface.(*HeaderCS7)
 }
