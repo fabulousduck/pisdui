@@ -3,8 +3,6 @@ package slice
 import (
 	"os"
 
-	"github.com/davecgh/go-spew/spew"
-
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/slice/header"
 	util "github.com/fabulousduck/pisdui/pisdui/util/file"
@@ -52,7 +50,6 @@ func (slice *Slice) Parse(file *os.File) {
 	sliceObject := new(Slice)
 	headerVersion := util.ReadBytesLong(file)
 	sliceObject.Header = header.ParseHeader(file, headerVersion)
-	spew.Dump(sliceObject.Header)
 
 	switch headerVersion {
 	case 6:
@@ -61,7 +58,6 @@ func (slice *Slice) Parse(file *os.File) {
 			block := NewBlock()
 			block.Parse(file)
 			sliceObject.Blocks = append(sliceObject.Blocks, block)
-			spew.Dump(block)
 		}
 		break
 	case 7:

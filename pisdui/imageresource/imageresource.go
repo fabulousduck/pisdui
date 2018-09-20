@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/backgroundcolor"
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/id"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/measurementscale"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/pixelaspectratio"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/slice"
@@ -57,8 +58,8 @@ func (resourceBlockSection *Data) Parse(file *os.File) error {
 	resourceBlockSection.Length = util.ReadBytesLong(file)
 
 	currPos, _ := file.Seek(0, 1)
-	endPos := int(currPos) + int(resourceBlockSection.Length)
-	for int(currPos) < endPos {
+	endPos := currPos + int64(resourceBlockSection.Length)
+	for currPos < endPos {
 		resourceBlockSection.ResourceBlocks = append(resourceBlockSection.ResourceBlocks, resourceBlockSection.parseResourceBlock(file))
 		pos, _ := file.Seek(0, 1)
 		currPos = pos
@@ -89,9 +90,9 @@ func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlo
 	return block
 }
 
-func parseResourceBlock(file *os.File, id uint16, size uint32) parsedResourceBlock {
+func parseResourceBlock(file *os.File, resourceId uint16, size uint32) parsedResourceBlock {
 	var p parsedResourceBlock
-	switch id {
+	switch resourceId {
 	case 1005:
 		resolutioninfoObject := resolutioninfo.NewResolutionInfo()
 		resolutioninfoObject.Parse(file)
@@ -104,6 +105,10 @@ func parseResourceBlock(file *os.File, id uint16, size uint32) parsedResourceBlo
 		printFlagsObject := printflags.NewPrintFlags()
 		printFlagsObject.Parse(file)
 		p = printFlagsObject
+	case 1044:
+		IDObject := id.NewID()
+		IDObject.Parse(file)
+		p = IDObject
 	case 1050:
 		sliceObject := slice.NewSlice()
 		sliceObject.Parse(file)

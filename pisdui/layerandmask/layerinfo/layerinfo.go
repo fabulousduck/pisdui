@@ -28,7 +28,9 @@ func NewLayerInfo() *LayerInfo {
 func (layerinfo *LayerInfo) Parse(file *os.File) {
 	layerinfo.Length = util.ReadBytesLong(file)
 	layerinfo.LayerCount = util.ReadBytesShort(file)
-	newLayerObject := layerrecord.NewLayerRecord()
-	newLayerObject.Parse(file)
-	layerinfo.LayerRecords = append(layerinfo.LayerRecords, newLayerObject)
+	for i := 0; i < int(layerinfo.LayerCount); i++ {
+		layer := layerrecord.NewLayerRecord()
+		layer.Parse(file)
+		layerinfo.LayerRecords = append(layerinfo.LayerRecords, layer)
+	}
 }

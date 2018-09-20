@@ -48,8 +48,7 @@ func (layerRecord *LayerRecord) Parse(file *os.File) {
 	layerRecord.BlendModeKey = util.ReadBytesString(file, 4)
 	layerRecord.Opacity = util.ReadSingleByte(file)
 	layerRecord.Clipping = util.ReadSingleByte(file)
-	layerRecord.Flags = util.ReadSingleByte(file) //TODO: do this properly
-	//filler
+	layerRecord.Flags = util.ReadSingleByte(file) //TODO: do this properly filler
 	util.ReadSingleByte(file)
 	layerRecord.ExtraFieldLength = util.ReadBytesLong(file)
 
