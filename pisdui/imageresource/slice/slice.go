@@ -47,17 +47,15 @@ func NewSlice() *Slice {
 }
 
 func (slice *Slice) Parse(file *os.File) {
-	sliceObject := new(Slice)
 	headerVersion := util.ReadBytesLong(file)
-	sliceObject.Header = header.ParseHeader(file, headerVersion)
-
+	slice.Header = header.ParseHeader(file, headerVersion)
 	switch headerVersion {
 	case 6:
-		headerObject := header.CastBackCS6(*sliceObject.Header)
+		headerObject := header.CastBackCS6(*slice.Header)
 		for i := 0; i < int(headerObject.NumSlices); i++ {
 			block := NewBlock()
 			block.Parse(file)
-			sliceObject.Blocks = append(sliceObject.Blocks, block)
+			slice.Blocks = append(slice.Blocks, block)
 		}
 		break
 	case 7:
