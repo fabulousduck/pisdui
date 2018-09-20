@@ -3,11 +3,11 @@ package icc
 import (
 	"os"
 
-	"github.com/fabulousduck/pisdui/pisdui/imageresource/icc/header"
+	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
 type ICCProfile struct {
-	Header  *header.Header
+	Header  *Header
 	Taglist *TagList
 }
 
@@ -31,5 +31,36 @@ func NewICCProfile() *ICCProfile {
 }
 
 func (iccProfile *ICCProfile) Parse(file *os.File) {
+	header := NewHeader()
+	tagList := NewTagList()
 
+	header.Parse(file)
+	iccProfile.Header = header
+	tagList.Parse(file)
+	iccProfile.Taglist = tagList
+	// fmt.Println("=-----")
+	// spew.Dump(iccProfile)
+}
+
+func NewTagList() *TagList {
+	return new(TagList)
+}
+
+func (tagList *TagList) Parse(file *os.File) {
+	tagList.Count = util.ReadBytesLong(file)
+	for i := 0; i < int(tagList.Count); i++ {
+		tag := NewTag()
+		tag.Parse(file)
+		tagList.Tags = append(tagList.Tags, tag)
+	}
+}
+
+func NewTag() *Tag {
+	return new(Tag)
+}
+
+func (tag *Tag) Parse(file *os.File) {
+	tag.Sig = util.ParseUnicodeString(file)
+	tag.Offset = util.ReadBytesLong(file)
+	tag.Size = util.ReadBytesLong(file)
 }

@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/davecgh/go-spew/spew"
-
 	"github.com/fabulousduck/pisdui/pisdui/colormode"
 	"github.com/fabulousduck/pisdui/pisdui/header"
 	"github.com/fabulousduck/pisdui/pisdui/imagedata"
@@ -60,7 +58,7 @@ func (psd *PSD) Parse() error {
 	layerAndMaskData := layerandmask.NewData()
 	layerAndMaskData.Parse(psd.Fp)
 	psd.LayerMaskInfo = layerAndMaskData
-	spew.Dump(psd)
+	// spew.Dump(psd)
 	return nil
 }
 

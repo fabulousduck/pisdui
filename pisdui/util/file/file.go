@@ -25,6 +25,19 @@ func ReadBytesNInt(file *os.File, length uint32) []byte {
 	return byteBuffer
 }
 
+/*ReadBytesLongLong reads 8 bytes into a new buffer
+and returns the result as a uint64*/
+func ReadBytesLongLong(file *os.File) uint64 {
+	byteBuffer := make([]byte, 8)
+	_, err := file.Read(byteBuffer)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+
+	return binary.BigEndian.Uint64(byteBuffer)
+}
+
 /*ReadBytesLong reads 4 bytes into a new buffer
 and returns the result as a uint32*/
 func ReadBytesLong(file *os.File) uint32 {
