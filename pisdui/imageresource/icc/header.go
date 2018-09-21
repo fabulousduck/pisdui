@@ -3,13 +3,15 @@ package icc
 import (
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
+
 	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 	"github.com/fabulousduck/pisdui/pisdui/util/shape"
 )
 
 type Header struct {
 	Size            uint32
-	Cmmid           uint32
+	Cmmid           string
 	Version         uint32
 	DeviceClass     string
 	ColorSpace      string
@@ -71,35 +73,36 @@ func (union *Union) Parse(file *os.File) {
 }
 
 func (header *Header) Parse(file *os.File) {
-	dateTimeObject := NewDateTime()
-	illuminantObject := shape.NewVec3_16()
-	profileIDObject := NewUnion()
+	// dateTimeObject := NewDateTime()
+	// illuminantObject := shape.NewVec3_16()
+	// profileIDObject := NewUnion()
 
 	header.Size = util.ReadBytesLong(file)
-	header.Cmmid = util.ReadBytesLong(file)
+	header.Cmmid = util.ReadBytesString(file, 4)
+	spew.Dump(header)
 	header.Version = util.ReadBytesLong(file)
-	header.DeviceClass = util.ParseUnicodeString(file)
-	header.ColorSpace = util.ParseUnicodeString(file)
-	header.Pcs = util.ParseUnicodeString(file)
+	header.DeviceClass = util.ReadBytesString(file, 4)
+	header.ColorSpace = util.ReadBytesString(file, 4)
+	header.Pcs = util.ReadBytesString(file, 4)
 
-	dateTimeObject.Parse(file)
+	// dateTimeObject.Parse(file)
 
-	header.DateTime = dateTimeObject
-	header.Magic = util.ReadBytesLong(file)
-	header.Platform = util.ParseUnicodeString(file)
-	header.Flags = util.ReadBytesLong(file)
-	header.Manufacturer = util.ParseUnicodeString(file)
-	header.Model = util.ReadBytesLong(file)
-	header.Attributes = util.ReadBytesLongLong(file)
-	header.RenderingIntent = util.ReadBytesLong(file)
+	// header.DateTime = dateTimeObject
+	// header.Magic = util.ReadBytesLong(file)
+	// header.Platform = util.ParseUnicodeString(file)
+	// header.Flags = util.ReadBytesLong(file)
+	// header.Manufacturer = util.ParseUnicodeString(file)
+	// header.Model = util.ReadBytesLong(file)
+	// header.Attributes = util.ReadBytesLongLong(file)
+	// header.RenderingIntent = util.ReadBytesLong(file)
 
-	illuminantObject.Parse(file)
+	// illuminantObject.Parse(file)
 
-	header.Illuminant = illuminantObject
-	header.Creator = util.ParseUnicodeString(file)
+	// header.Illuminant = illuminantObject
+	// header.Creator = util.ParseUnicodeString(file)
 
-	profileIDObject.Parse(file)
+	// profileIDObject.Parse(file)
 
-	header.ProfileID = profileIDObject
-	header.Reserved = util.ReadSingleByte(file)
+	// header.ProfileID = profileIDObject
+	// header.Reserved = util.ReadSingleByte(file)
 }
