@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/davecgh/go-spew/spew"
-
 	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 	"github.com/fabulousduck/pisdui/pisdui/util/shape"
 )
@@ -17,7 +16,7 @@ type Header struct {
 	ColorSpace      string
 	Pcs             string
 	DateTime        *DateTime
-	Magic           uint32
+	Magic           string
 	Platform        string
 	Flags           uint32
 	Manufacturer    string
@@ -25,7 +24,7 @@ type Header struct {
 	Attributes      uint64
 	RenderingIntent uint32
 	Illuminant      *shape.Vec3_16
-	Creator         string
+	Creator         uint32
 	ProfileID       *Union
 	Reserved        int
 }
@@ -40,9 +39,9 @@ type DateTime struct {
 }
 
 type Union struct {
-	ID8  int
-	ID16 uint16
-	ID32 uint32
+	ID8  []int    //128bytes
+	ID16 []uint16 //128bytes
+	ID32 []uint32 //128bytes
 }
 
 func NewHeader() *Header {
@@ -67,42 +66,52 @@ func NewUnion() *Union {
 }
 
 func (union *Union) Parse(file *os.File) {
-	union.ID8 = util.ReadSingleByte(file)
-	union.ID16 = util.ReadBytesShort(file)
-	union.ID32 = util.ReadBytesLong(file)
+	for i := 0; i < 16; i++ {
+		union.ID8 = append(union.ID8, util.ReadSingleByte(file))
+	}
+	for i := 0; i < 8; i++ {
+		union.ID16 = append(union.ID16, util.ReadBytesShort(file))
+	}
+	for i := 0; i < 4; i++ {
+		union.ID32 = append(union.ID32, util.ReadBytesLong(file))
+	}
 }
 
 func (header *Header) Parse(file *os.File) {
-	// dateTimeObject := NewDateTime()
-	// illuminantObject := shape.NewVec3_16()
-	// profileIDObject := NewUnion()
+	dateTimeObject := NewDateTime()
+	illuminantObject := shape.NewVec3_16()
+	profileIDObject := NewUnion()
 
 	header.Size = util.ReadBytesLong(file)
 	header.Cmmid = util.ReadBytesString(file, 4)
-	spew.Dump(header)
 	header.Version = util.ReadBytesLong(file)
 	header.DeviceClass = util.ReadBytesString(file, 4)
 	header.ColorSpace = util.ReadBytesString(file, 4)
 	header.Pcs = util.ReadBytesString(file, 4)
 
-	// dateTimeObject.Parse(file)
+	dateTimeObject.Parse(file)
 
-	// header.DateTime = dateTimeObject
-	// header.Magic = util.ReadBytesLong(file)
-	// header.Platform = util.ParseUnicodeString(file)
-	// header.Flags = util.ReadBytesLong(file)
-	// header.Manufacturer = util.ParseUnicodeString(file)
-	// header.Model = util.ReadBytesLong(file)
-	// header.Attributes = util.ReadBytesLongLong(file)
-	// header.RenderingIntent = util.ReadBytesLong(file)
+	header.DateTime = dateTimeObject
 
-	// illuminantObject.Parse(file)
+	header.Magic = util.ReadBytesString(file, 4)
+	header.Platform = util.ReadBytesString(file, 4)
+	header.Flags = util.ReadBytesLong(file)
+	spew.Dump(file.Seek(0, 1))
 
-	// header.Illuminant = illuminantObject
-	// header.Creator = util.ParseUnicodeString(file)
+	header.Manufacturer = util.ReadBytesString(file, 4)
+	header.Model = util.ReadBytesLong(file)
+	header.Attributes = util.ReadBytesLongLong(file)
 
-	// profileIDObject.Parse(file)
+	header.RenderingIntent = util.ReadBytesLong(file)
 
-	// header.ProfileID = profileIDObject
-	// header.Reserved = util.ReadSingleByte(file)
+	illuminantObject.Parse(file)
+
+	header.Illuminant = illuminantObject
+	header.Creator = util.ReadBytesLong(file)
+	profileIDObject.Parse(file)
+
+	header.ProfileID = profileIDObject
+	header.Reserved = util.ReadSingleByte(file)
+	spew.Dump(header)
+
 }
