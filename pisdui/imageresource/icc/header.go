@@ -115,3 +115,40 @@ func (header *Header) Parse(file *os.File) {
 	spew.Dump(header)
 
 }
+
+func (header *Header) GetFullname(field string) string {
+	nameMap := map[string]string{
+		"ADBE": "Adobe Systems Inc.",
+		"ACMS": "Agfa Graphics N.V. ",
+		"appl": "Apple Computer",
+		"CCMS": "Canon",
+		"UCCM": "Canon",
+		"UCMS": "Canon",
+		"EFI":  "EFI",
+		"FF ":  "Fuji Film Electronic Imaging",
+		"EXAC": "ExactCODE GmbH",
+		"HCMM": "Global Graphics Software Inc",
+		"argl": "Graeme Gill",
+		"LgoS": "GretagMacbeth",
+		"HDM ": "Heidelberger Druckmaschinen AG",
+		"lcms": "Hewlett Packard ",
+		"RMIX": "ICC",
+		"KCMS": "Kodak",
+		"MCML": "Konica Minolta",
+		"WCS":  "Microsoft",
+		"SIGN": "Mutoh",
+		"ONYX": "Onyx Graphics",
+		"RGMS": "Rolf Gierling Multitools",
+		"SICC": "SampleICC",
+		"TCMM": "Toshiba TEC Corporation",
+		"32BT": "the imaging factory",
+		"vivo": "Vivo Mobile Communication",
+		"WTG ": "Ware To Go",
+		"zc00": "Zoran Corporation",
+	}
+
+	if val, ok := nameMap[field]; ok {
+		return val
+	}
+	return field
+}
