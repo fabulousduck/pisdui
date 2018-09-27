@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/icc"
+
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/backgroundcolor"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/id"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/measurementscale"
@@ -105,6 +107,10 @@ func parseResourceBlock(file *os.File, resourceId uint16, size uint32) parsedRes
 		printFlagsObject := printflags.NewPrintFlags()
 		printFlagsObject.Parse(file)
 		p = printFlagsObject
+	case 1039:
+		ICCProfileObject := icc.NewICCProfile()
+		ICCProfileObject.Parse(file)
+		p = ICCProfileObject
 	case 1044:
 		IDObject := id.NewID()
 		IDObject.Parse(file)
