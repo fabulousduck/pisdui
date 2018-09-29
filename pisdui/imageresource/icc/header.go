@@ -23,10 +23,10 @@ type Header struct {
 	Model           uint32
 	Attributes      uint64
 	RenderingIntent uint32
-	Illuminant      *shape.Vec3_16
-	Creator         uint32
-	ProfileID       *Union
-	Reserved        int
+	Illuminant      *shape.Vec3_32
+	Creator         string
+	ProfileId       []byte
+	Reserved        []byte
 }
 
 type DateTime struct {
@@ -36,12 +36,6 @@ type DateTime struct {
 	Hours   uint16
 	Minutes uint16
 	Seconds uint16
-}
-
-type Union struct {
-	ID8  []int    //128bytes
-	ID16 []uint16 //128bytes
-	ID32 []uint32 //128bytes
 }
 
 func NewHeader() *Header {
@@ -61,26 +55,9 @@ func (dateTime *DateTime) Parse(file *os.File) {
 	dateTime.Seconds = util.ReadBytesShort(file)
 }
 
-func NewUnion() *Union {
-	return new(Union)
-}
-
-func (union *Union) Parse(file *os.File) {
-	for i := 0; i < 16; i++ {
-		union.ID8 = append(union.ID8, util.ReadSingleByte(file))
-	}
-	for i := 0; i < 8; i++ {
-		union.ID16 = append(union.ID16, util.ReadBytesShort(file))
-	}
-	for i := 0; i < 4; i++ {
-		union.ID32 = append(union.ID32, util.ReadBytesLong(file))
-	}
-}
-
 func (header *Header) Parse(file *os.File) {
 	dateTimeObject := NewDateTime()
-	illuminantObject := shape.NewVec3_16()
-	profileIDObject := NewUnion()
+	illuminantObject := shape.NewVec3_32()
 
 	header.Size = util.ReadBytesLong(file)
 	header.Cmmid = util.ReadBytesString(file, 4)
@@ -96,9 +73,9 @@ func (header *Header) Parse(file *os.File) {
 	header.Magic = util.ReadBytesString(file, 4)
 	header.Platform = util.ReadBytesString(file, 4)
 	header.Flags = util.ReadBytesLong(file)
-	spew.Dump(file.Seek(0, 1))
 
 	header.Manufacturer = util.ReadBytesString(file, 4)
+
 	header.Model = util.ReadBytesLong(file)
 	header.Attributes = util.ReadBytesLongLong(file)
 
@@ -107,11 +84,12 @@ func (header *Header) Parse(file *os.File) {
 	illuminantObject.Parse(file)
 
 	header.Illuminant = illuminantObject
-	header.Creator = util.ReadBytesLong(file)
-	profileIDObject.Parse(file)
+	header.Creator = util.ReadBytesString(file, 4)
 
-	header.ProfileID = profileIDObject
-	header.Reserved = util.ReadSingleByte(file)
+	header.ProfileId = util.ReadBytesNInt(file, 16)
+	header.Reserved = util.ReadBytesNInt(file, 28)
+	spew.Dump(file.Seek(0, 1))
+
 	spew.Dump(header)
 
 }

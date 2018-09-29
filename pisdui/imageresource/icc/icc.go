@@ -3,6 +3,8 @@ package icc
 import (
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
+
 	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
@@ -38,8 +40,6 @@ func (iccProfile *ICCProfile) Parse(file *os.File) {
 	iccProfile.Header = header
 	tagList.Parse(file)
 	iccProfile.Taglist = tagList
-	// fmt.Println("=-----")
-	// spew.Dump(iccProfile)
 }
 
 func NewTagList() *TagList {
@@ -48,6 +48,7 @@ func NewTagList() *TagList {
 
 func (tagList *TagList) Parse(file *os.File) {
 	tagList.Count = util.ReadBytesLong(file)
+	spew.Dump(tagList.Count)
 	for i := 0; i < int(tagList.Count); i++ {
 		tag := NewTag()
 		tag.Parse(file)
@@ -60,7 +61,7 @@ func NewTag() *Tag {
 }
 
 func (tag *Tag) Parse(file *os.File) {
-	tag.Sig = util.ParseUnicodeString(file)
+	tag.Sig = util.ReadBytesString(file, 4)
 	tag.Offset = util.ReadBytesLong(file)
 	tag.Size = util.ReadBytesLong(file)
 }

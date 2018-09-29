@@ -13,18 +13,18 @@ type Rectangle struct {
 	Right  uint32
 }
 
-type Vec3_16 struct {
-	X uint16
-	Y uint16
-	Z uint16
+type Vec3_32 struct {
+	X uint32
+	Y uint32
+	Z uint32
 }
 
 func NewRectangle() *Rectangle {
 	return new(Rectangle)
 }
 
-func NewVec3_16() *Vec3_16 {
-	return new(Vec3_16)
+func NewVec3_32() *Vec3_32 {
+	return new(Vec3_32)
 }
 
 func (rectangle *Rectangle) Parse(file *os.File) {
@@ -41,8 +41,8 @@ func (rectangle *Rectangle) ParseSliceFormat(file *os.File) {
 	rectangle.Bottom = util.ReadBytesLong(file)
 }
 
-func (vec3_16 *Vec3_16) Parse(file *os.File) {
-	vec3_16.X = util.ReadBytesShort(file)
-	vec3_16.Y = util.ReadBytesShort(file)
-	vec3_16.Z = util.ReadBytesShort(file)
+func (vec3_32 *Vec3_32) Parse(file *os.File) {
+	vec3_32.X = util.ReadBytesLong(file)
+	vec3_32.Y = util.ReadBytesLong(file)
+	vec3_32.Z = util.ReadBytesLong(file)
 }
