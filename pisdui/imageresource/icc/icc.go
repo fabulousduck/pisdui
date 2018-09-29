@@ -9,11 +9,11 @@ import (
 )
 
 type ICCProfile struct {
-	Header  *Header
-	Taglist *TagList
+	Header   *Header
+	TagTable *TagTable
 }
 
-type TagList struct {
+type TagTable struct {
 	Count uint32
 	Tags  []*Tag
 }
@@ -34,25 +34,25 @@ func NewICCProfile() *ICCProfile {
 
 func (iccProfile *ICCProfile) Parse(file *os.File) {
 	header := NewHeader()
-	tagList := NewTagList()
+	tagTable := NewTagList()
 
 	header.Parse(file)
 	iccProfile.Header = header
-	tagList.Parse(file)
-	iccProfile.Taglist = tagList
+	tagTable.Parse(file)
+	iccProfile.TagTable = tagTable
 }
 
-func NewTagList() *TagList {
-	return new(TagList)
+func NewTagList() *TagTable {
+	return new(TagTable)
 }
 
-func (tagList *TagList) Parse(file *os.File) {
-	tagList.Count = util.ReadBytesLong(file)
-	spew.Dump(tagList.Count)
-	for i := 0; i < int(tagList.Count); i++ {
+func (tagTable *TagTable) Parse(file *os.File) {
+	tagTable.Count = util.ReadBytesLong(file)
+	spew.Dump(tagTable.Count)
+	for i := 0; i < int(tagTable.Count); i++ {
 		tag := NewTag()
 		tag.Parse(file)
-		tagList.Tags = append(tagList.Tags, tag)
+		tagTable.Tags = append(tagTable.Tags, tag)
 	}
 }
 
