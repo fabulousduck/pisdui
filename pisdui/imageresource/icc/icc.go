@@ -8,9 +8,12 @@ import (
 	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
+type TagData []byte
+
 type ICCProfile struct {
 	Header   *Header
 	TagTable *TagTable
+	TagData  *TagData
 }
 
 type TagTable struct {
@@ -48,12 +51,12 @@ func NewTagList() *TagTable {
 
 func (tagTable *TagTable) Parse(file *os.File) {
 	tagTable.Count = util.ReadBytesLong(file)
-	spew.Dump(tagTable.Count)
 	for i := 0; i < int(tagTable.Count); i++ {
 		tag := NewTag()
 		tag.Parse(file)
 		tagTable.Tags = append(tagTable.Tags, tag)
 	}
+	spew.Dump(file.Seek(0, 1))
 }
 
 func NewTag() *Tag {

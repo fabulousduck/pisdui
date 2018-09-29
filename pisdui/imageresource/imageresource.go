@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
+
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/icc"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/backgroundcolor"
@@ -110,6 +112,7 @@ func parseResourceBlock(file *os.File, resourceId uint16, size uint32) parsedRes
 	case 1039:
 		ICCProfileObject := icc.NewICCProfile()
 		ICCProfileObject.Parse(file)
+		spew.Dump(ICCProfileObject)
 		p = ICCProfileObject
 	case 1044:
 		IDObject := id.NewID()

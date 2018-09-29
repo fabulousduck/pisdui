@@ -3,7 +3,6 @@ package icc
 import (
 	"os"
 
-	"github.com/davecgh/go-spew/spew"
 	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 	"github.com/fabulousduck/pisdui/pisdui/util/shape"
 )
@@ -88,10 +87,6 @@ func (header *Header) Parse(file *os.File) {
 
 	header.ProfileId = util.ReadBytesNInt(file, 16)
 	header.Reserved = util.ReadBytesNInt(file, 28)
-	spew.Dump(file.Seek(0, 1))
-
-	spew.Dump(header)
-
 }
 
 func (header *Header) GetFullname(field string) string {
