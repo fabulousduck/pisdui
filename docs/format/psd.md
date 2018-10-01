@@ -17,7 +17,7 @@ The structure of a .psd file is devided into five sections
 ## Notes
 
  - All lengths are in bytes
- 
+
  ### Types used for lengths
 
 | length | type |
@@ -46,11 +46,12 @@ The structure of a .psd file is devided into five sections
 | Colormode | variable | colormode of the file, see colormodes for possibilities| |
 
 ## Color mode data
+
     The color mode data section here is only really important
     when it is either "Indexed" or "Duotone". all other formats
     have the no special data fields.
 
-    Not much is currently known how the .psd file format uses 
+    Not much is currently known how the .psd file format uses
     the `duotone` data field and not much description on it can
     be found.
 
