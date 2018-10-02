@@ -16,7 +16,7 @@ psd file interpreter in go
         if err != nil {
             panic(err)
         }
-        psd.Parse()
+         psd.Parse()
     }
 
 ```
