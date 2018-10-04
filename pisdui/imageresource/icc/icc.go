@@ -3,17 +3,13 @@ package icc
 import (
 	"os"
 
-	"github.com/davecgh/go-spew/spew"
-
 	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
-
-type TagData []byte
 
 type ICCProfile struct {
 	Header   *Header
 	TagTable *TagTable
-	TagData  *TagData
+	TagData  [][]byte
 }
 
 type TagTable struct {
@@ -42,7 +38,11 @@ func (iccProfile *ICCProfile) Parse(file *os.File) {
 	header.Parse(file)
 	iccProfile.Header = header
 	tagTable.Parse(file)
-	iccProfile.TagTable = tagTable
+
+	// for i := 0; i < int(iccProfile.TagTable.Count); i++ {
+	// 	buffer := util.ReadBytesNInt(file, iccProfile.TagTable.Tags[i].Size)
+	// 	iccProfile.TagData = append(iccProfile.TagData, buffer)
+	// }
 }
 
 func NewTagList() *TagTable {
@@ -56,7 +56,6 @@ func (tagTable *TagTable) Parse(file *os.File) {
 		tag.Parse(file)
 		tagTable.Tags = append(tagTable.Tags, tag)
 	}
-	spew.Dump(file.Seek(0, 1))
 }
 
 func NewTag() *Tag {
