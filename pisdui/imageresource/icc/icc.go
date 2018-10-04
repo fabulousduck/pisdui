@@ -38,7 +38,7 @@ func (iccProfile *ICCProfile) Parse(file *os.File) {
 	header.Parse(file)
 	iccProfile.Header = header
 	tagTable.Parse(file)
-
+	iccProfile.TagTable = tagTable
 	// for i := 0; i < int(iccProfile.TagTable.Count); i++ {
 	// 	buffer := util.ReadBytesNInt(file, iccProfile.TagTable.Tags[i].Size)
 	// 	iccProfile.TagData = append(iccProfile.TagData, buffer)
