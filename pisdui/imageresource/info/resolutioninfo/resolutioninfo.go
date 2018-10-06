@@ -3,7 +3,7 @@ package resolutioninfo
 import (
 	"os"
 
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
+	"github.com/pisdhooy/fsutil"
 )
 
 //Note: HorizontalResolution and VerticalResolution are byte buffers as they are fixed point integers
@@ -25,12 +25,12 @@ func NewResolutionInfo() *Resolutioninfo {
 }
 
 func (resolutioninfo *Resolutioninfo) Parse(file *os.File) {
-	resolutioninfo.HorizontalResolution = parseFixedPoint(util.ReadRawBytes(file, 4))
-	resolutioninfo.HorizontalResolutionUnit = parseUnit(util.ReadBytesShort(file))
-	resolutioninfo.WidthResolutionUnit = parseUnit(util.ReadBytesShort(file))
-	resolutioninfo.VerticalResolution = parseFixedPoint(util.ReadRawBytes(file, 4))
-	resolutioninfo.VerticalResolutionUnit = parseUnit(util.ReadBytesShort(file))
-	resolutioninfo.HeightUnit = parseUnit(util.ReadBytesShort(file))
+	resolutioninfo.HorizontalResolution = parseFixedPoint(fsutil.ReadRawBytes(file, 4))
+	resolutioninfo.HorizontalResolutionUnit = parseUnit(fsutil.ReadBytesShort(file))
+	resolutioninfo.WidthResolutionUnit = parseUnit(fsutil.ReadBytesShort(file))
+	resolutioninfo.VerticalResolution = parseFixedPoint(fsutil.ReadRawBytes(file, 4))
+	resolutioninfo.VerticalResolutionUnit = parseUnit(fsutil.ReadBytesShort(file))
+	resolutioninfo.HeightUnit = parseUnit(fsutil.ReadBytesShort(file))
 }
 
 func parseUnit(unit uint16) string {

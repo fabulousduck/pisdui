@@ -3,7 +3,7 @@ package version
 import (
 	"os"
 
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
+	"github.com/pisdhooy/fsutil"
 )
 
 type Version struct {
@@ -23,9 +23,9 @@ func NewVersion() *Version {
 }
 
 func (version *Version) Parse(file *os.File) {
-	version.Key = util.ReadBytesLong(file)
-	version.HasRealMergedData = util.ReadSingleByte(file)
-	version.WriterName = util.ParseUnicodeString(file)
-	version.ReaderName = util.ParseUnicodeString(file)
-	version.FileVersion = util.ReadBytesLong(file)
+	version.Key = fsutil.ReadBytesLong(file)
+	version.HasRealMergedData = fsutil.ReadSingleByte(file)
+	version.WriterName = fsutil.ParseUnicodeString(file)
+	version.ReaderName = fsutil.ParseUnicodeString(file)
+	version.FileVersion = fsutil.ReadBytesLong(file)
 }

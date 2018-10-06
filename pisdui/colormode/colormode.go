@@ -3,7 +3,7 @@ package colormode
 import (
 	"os"
 
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
+	"github.com/pisdhooy/fsutil"
 )
 
 /*Data contains data related to the files colors mode
@@ -28,7 +28,7 @@ func NewData() *Data {
 Only really interesting when color mode in the header is either "Indexed" or "Duotone"
 */
 func (cm *Data) Parse(file *os.File, colorMode string) {
-	cm.Length = util.ReadBytesLong(file)
+	cm.Length = fsutil.ReadBytesLong(file)
 	switch colorMode {
 	case "Indexed":
 		cm.parseIndexedColorMode(file)
@@ -42,11 +42,11 @@ func (cm *Data) Parse(file *os.File, colorMode string) {
 }
 
 func (cm *Data) parseIndexedColorMode(file *os.File) {
-	palette := util.ReadIntoArray16(file, cm.Length)
+	palette := fsutil.ReadIntoArray16(file, cm.Length)
 	cm.Palette = palette
 }
 
 func (cm *Data) parseDuotoneColorMode(file *os.File) {
-	duotoneData := util.ReadBytesNInt(file, cm.Length)
+	duotoneData := fsutil.ReadBytesNInt(file, cm.Length)
 	cm.DuotoneData = duotoneData
 }

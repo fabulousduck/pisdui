@@ -3,9 +3,8 @@ package measurementscale
 import (
 	"os"
 
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
-
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor"
+	"github.com/pisdhooy/fsutil"
 )
 
 type MeasurementScale struct {
@@ -24,7 +23,7 @@ func NewMeasurementScale() *MeasurementScale {
 func (measurementScale *MeasurementScale) Parse(file *os.File) {
 	descriptorObject := descriptor.NewDescriptor()
 
-	measurementScale.DescriptorVersion = util.ReadBytesLong(file)
+	measurementScale.DescriptorVersion = fsutil.ReadBytesLong(file)
 	descriptorObject.Parse(file)
 	measurementScale.Descriptor = descriptorObject
 }

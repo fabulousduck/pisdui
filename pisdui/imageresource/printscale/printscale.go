@@ -3,7 +3,7 @@ package printscale
 import (
 	"os"
 
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
+	"github.com/pisdhooy/fsutil"
 )
 
 type PrintScale struct {
@@ -23,13 +23,13 @@ func NewPrintScale() *PrintScale {
 
 func (printScale *PrintScale) Parse(file *os.File) {
 	printScale.parseStyle(file)
-	printScale.XLocation = util.ReadFloat(file)
-	printScale.YLocation = util.ReadFloat(file)
-	printScale.Scale = util.ReadFloat(file)
+	printScale.XLocation = fsutil.ReadFloat(file)
+	printScale.YLocation = fsutil.ReadFloat(file)
+	printScale.Scale = fsutil.ReadFloat(file)
 }
 
 func (printscale *PrintScale) parseStyle(file *os.File) {
-	style := util.ReadBytesShort(file)
+	style := fsutil.ReadBytesShort(file)
 	switch style {
 	case 0:
 		printscale.Style = "centered"

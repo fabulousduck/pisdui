@@ -3,7 +3,7 @@ package printflaginfo
 import (
 	"os"
 
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
+	"github.com/pisdhooy/fsutil"
 )
 
 type PrintFlagInfo struct {
@@ -23,9 +23,9 @@ func NewPrintFlagInfo() *PrintFlagInfo {
 }
 
 func (printFlagInfo *PrintFlagInfo) Parse(file *os.File) {
-	printFlagInfo.Version = util.ReadBytesShort(file)
-	printFlagInfo.CenterCrop = util.ReadSingleByte(file)
-	printFlagInfo.BufferByte = util.ReadSingleByte(file)
-	printFlagInfo.BleedWidth = util.ReadBytesLong(file)
-	printFlagInfo.BleedWidthScale = util.ReadBytesShort(file)
+	printFlagInfo.Version = fsutil.ReadBytesShort(file)
+	printFlagInfo.CenterCrop = fsutil.ReadSingleByte(file)
+	printFlagInfo.BufferByte = fsutil.ReadSingleByte(file)
+	printFlagInfo.BleedWidth = fsutil.ReadBytesLong(file)
+	printFlagInfo.BleedWidthScale = fsutil.ReadBytesShort(file)
 }
