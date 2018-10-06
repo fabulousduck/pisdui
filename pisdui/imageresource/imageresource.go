@@ -7,7 +7,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 
-	"github.com/fabulousduck/pisdui/pisdui/imageresource/icc"
+	"github.com/pisdhooy/icc"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/backgroundcolor"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/id"
