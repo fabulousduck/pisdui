@@ -3,7 +3,7 @@ package id
 import (
 	"os"
 
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
+	"github.com/pisdhooy/fsutil"
 )
 
 type ID struct {
@@ -19,5 +19,5 @@ func NewID() *ID {
 }
 
 func (id *ID) Parse(file *os.File) {
-	id.value = util.ReadBytesLong(file)
+	id.value = fsutil.ReadBytesLong(file)
 }

@@ -3,8 +3,8 @@ package header
 import (
 	"os"
 
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 	"github.com/fabulousduck/pisdui/pisdui/util/shape"
+	"github.com/pisdhooy/fsutil"
 )
 
 type HeaderCS6 struct {
@@ -22,6 +22,6 @@ func (header *HeaderCS6) Parse(file *os.File) {
 	rectangleObject := shape.NewRectangle()
 	rectangleObject.Parse(file)
 	header.BoundingRectangle = rectangleObject
-	header.GroupName = util.ParseUnicodeString(file)
-	header.NumSlices = util.ReadBytesLong(file)
+	header.GroupName = fsutil.ParseUnicodeString(file)
+	header.NumSlices = fsutil.ReadBytesLong(file)
 }

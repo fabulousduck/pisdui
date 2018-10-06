@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
+	"github.com/pisdhooy/fsutil"
 )
 
 type referenceOsKeyBlock interface {
@@ -75,24 +75,24 @@ func (_ EnumReference) getReferenceOsKeyBlockID() string {
 }
 
 func (enumReference *EnumReference) Parse(file *os.File) {
-	enumReference.ClassIDName = util.ParseUnicodeString(file)
-	classIDlength := util.ReadBytesLong(file)
+	enumReference.ClassIDName = fsutil.ParseUnicodeString(file)
+	classIDlength := fsutil.ReadBytesLong(file)
 	if classIDlength == 0 {
-		enumReference.ClassID = util.ReadBytesString(file, 4)
+		enumReference.ClassID = fsutil.ReadBytesString(file, 4)
 	} else {
-		enumReference.ClassID = util.ReadBytesString(file, int(classIDlength))
+		enumReference.ClassID = fsutil.ReadBytesString(file, int(classIDlength))
 	}
-	typeIDLength := util.ReadBytesLong(file)
+	typeIDLength := fsutil.ReadBytesLong(file)
 	if typeIDLength == 0 {
-		enumReference.TypeID = util.ReadBytesString(file, 4)
+		enumReference.TypeID = fsutil.ReadBytesString(file, 4)
 	} else {
-		enumReference.TypeID = util.ReadBytesString(file, int(typeIDLength))
+		enumReference.TypeID = fsutil.ReadBytesString(file, int(typeIDLength))
 	}
-	enumLength := util.ReadBytesLong(file)
+	enumLength := fsutil.ReadBytesLong(file)
 	if enumLength == 0 {
-		enumReference.Enum = util.ReadBytesString(file, 4)
+		enumReference.Enum = fsutil.ReadBytesString(file, 4)
 	} else {
-		enumReference.Enum = util.ReadBytesString(file, int(enumLength))
+		enumReference.Enum = fsutil.ReadBytesString(file, int(enumLength))
 	}
 }
 
@@ -109,7 +109,7 @@ func NewName() *Name {
 }
 
 func (name *Name) Parse(file *os.File) {
-	name.Value = util.ParseUnicodeString(file)
+	name.Value = fsutil.ParseUnicodeString(file)
 }
 
 type Property struct {
@@ -127,18 +127,18 @@ func NewProperty() *Property {
 }
 
 func (property *Property) Parse(file *os.File) {
-	property.ClassIDName = util.ParseUnicodeString(file)
-	classIDlength := util.ReadBytesLong(file)
+	property.ClassIDName = fsutil.ParseUnicodeString(file)
+	classIDlength := fsutil.ReadBytesLong(file)
 	if classIDlength == 0 {
-		property.ClassID = util.ReadBytesString(file, 4)
+		property.ClassID = fsutil.ReadBytesString(file, 4)
 	} else {
-		property.ClassID = util.ReadBytesString(file, int(classIDlength))
+		property.ClassID = fsutil.ReadBytesString(file, int(classIDlength))
 	}
-	keyIDLength := util.ReadBytesLong(file)
+	keyIDLength := fsutil.ReadBytesLong(file)
 	if keyIDLength == 0 {
-		property.KeyID = util.ReadBytesString(file, 4)
+		property.KeyID = fsutil.ReadBytesString(file, 4)
 	} else {
-		property.KeyID = util.ReadBytesString(file, int(keyIDLength))
+		property.KeyID = fsutil.ReadBytesString(file, int(keyIDLength))
 	}
 }
 
@@ -155,12 +155,12 @@ func NewClass() *Class {
 }
 
 func (class *Class) Parse(file *os.File) {
-	class.ClassIDName = util.ParseUnicodeString(file)
-	classIDlength := util.ReadBytesLong(file)
+	class.ClassIDName = fsutil.ParseUnicodeString(file)
+	classIDlength := fsutil.ReadBytesLong(file)
 	if classIDlength == 0 {
-		class.ClassID = util.ReadBytesString(file, 4)
+		class.ClassID = fsutil.ReadBytesString(file, 4)
 	} else {
-		class.ClassID = util.ReadBytesString(file, int(classIDlength))
+		class.ClassID = fsutil.ReadBytesString(file, int(classIDlength))
 	}
 }
 
@@ -179,13 +179,13 @@ func NewOffset() *Offset {
 }
 
 func (offset *Offset) Parse(file *os.File) {
-	offset.ClassIDName = util.ParseUnicodeString(file)
-	classIDlength := util.ReadBytesLong(file)
+	offset.ClassIDName = fsutil.ParseUnicodeString(file)
+	classIDlength := fsutil.ReadBytesLong(file)
 	if classIDlength == 0 {
-		offset.ClassID = util.ReadBytesString(file, 4)
+		offset.ClassID = fsutil.ReadBytesString(file, 4)
 	} else {
-		offset.ClassID = util.ReadBytesString(file, int(classIDlength))
+		offset.ClassID = fsutil.ReadBytesString(file, int(classIDlength))
 	}
 
-	offset.Value = util.ReadBytesLong(file)
+	offset.Value = fsutil.ReadBytesLong(file)
 }

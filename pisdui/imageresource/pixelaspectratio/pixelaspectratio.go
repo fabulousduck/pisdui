@@ -3,7 +3,7 @@ package pixelaspectratio
 import (
 	"os"
 
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
+	"github.com/pisdhooy/fsutil"
 )
 
 type PixelAspectRatio struct {
@@ -20,7 +20,7 @@ func NewPixelAspectRatio() *PixelAspectRatio {
 }
 
 func (pixelAspectRatio *PixelAspectRatio) Parse(file *os.File) {
-	pixelAspectRatio.Version = util.ReadBytesLong(file)
-	Coordinates, _ := util.ReadDouble(file) //TODO handle this error
+	pixelAspectRatio.Version = fsutil.ReadBytesLong(file)
+	Coordinates, _ := fsutil.ReadDouble(file) //TODO handle this error
 	pixelAspectRatio.Coordinates = Coordinates
 }

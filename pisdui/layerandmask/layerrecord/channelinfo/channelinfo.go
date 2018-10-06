@@ -3,7 +3,7 @@ package channelinfo
 import (
 	"os"
 
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
+	"github.com/pisdhooy/fsutil"
 )
 
 type ChannelInfo struct {
@@ -16,6 +16,6 @@ func NewChannelInfo() *ChannelInfo {
 }
 
 func (channelInfo *ChannelInfo) Parse(file *os.File) {
-	channelInfo.ID = util.ReadBytesShort(file)
-	channelInfo.Length = util.ReadBytesLong(file)
+	channelInfo.ID = fsutil.ReadBytesShort(file)
+	channelInfo.Length = fsutil.ReadBytesLong(file)
 }

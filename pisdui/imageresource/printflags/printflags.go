@@ -3,7 +3,7 @@ package printflags
 import (
 	"os"
 
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
+	"github.com/pisdhooy/fsutil"
 )
 
 type PrintFlags struct {
@@ -28,13 +28,13 @@ func NewPrintFlags() *PrintFlags {
 }
 
 func (printFlags *PrintFlags) Parse(file *os.File) {
-	printFlags.Labels = util.ReadSingleByte(file) != 0
-	printFlags.CropMarks = util.ReadSingleByte(file) != 0
-	printFlags.ColorBars = util.ReadSingleByte(file) != 0
-	printFlags.RegistrationMarks = util.ReadSingleByte(file) != 0
-	printFlags.Negative = util.ReadSingleByte(file) != 0
-	printFlags.Flip = util.ReadSingleByte(file) != 0
-	printFlags.Interpolate = util.ReadSingleByte(file) != 0
-	printFlags.Caption = util.ReadSingleByte(file) != 0
-	printFlags.MysteryByte = util.ReadSingleByte(file) != 0
+	printFlags.Labels = fsutil.ReadSingleByte(file) != 0
+	printFlags.CropMarks = fsutil.ReadSingleByte(file) != 0
+	printFlags.ColorBars = fsutil.ReadSingleByte(file) != 0
+	printFlags.RegistrationMarks = fsutil.ReadSingleByte(file) != 0
+	printFlags.Negative = fsutil.ReadSingleByte(file) != 0
+	printFlags.Flip = fsutil.ReadSingleByte(file) != 0
+	printFlags.Interpolate = fsutil.ReadSingleByte(file) != 0
+	printFlags.Caption = fsutil.ReadSingleByte(file) != 0
+	printFlags.MysteryByte = fsutil.ReadSingleByte(file) != 0
 }

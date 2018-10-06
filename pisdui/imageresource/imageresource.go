@@ -7,6 +7,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 
+	"github.com/pisdhooy/fsutil"
 	"github.com/pisdhooy/icc"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/backgroundcolor"
@@ -23,7 +24,6 @@ import (
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/info/version"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor"
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
 )
 
 type parsedResourceBlock interface {
@@ -59,7 +59,7 @@ func NewData() *Data {
 //Parse will read all image resources located in
 //the photoshop file and will read them into the ImageResources struct
 func (resourceBlockSection *Data) Parse(file *os.File) error {
-	resourceBlockSection.Length = util.ReadBytesLong(file)
+	resourceBlockSection.Length = fsutil.ReadBytesLong(file)
 
 	currPos, _ := file.Seek(0, 1)
 	endPos := currPos + int64(resourceBlockSection.Length)
@@ -77,19 +77,19 @@ func (resourceBlockSection *Data) Parse(file *os.File) error {
 
 func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlock {
 	block := new(ResourceBlock)
-	block.Signature = util.ReadBytesString(file, 4)
+	block.Signature = fsutil.ReadBytesString(file, 4)
 
-	block.ID = util.ReadBytesShort(file)
+	block.ID = fsutil.ReadBytesShort(file)
 
-	pascalString := util.ParsePascalString(file)
+	pascalString := fsutil.ParsePascalString(file)
 
 	block.PascalString = pascalString
-	block.DataSize = util.ReadBytesLong(file)
+	block.DataSize = fsutil.ReadBytesLong(file)
 
 	block.ParsedResourceBlock = parseResourceBlock(file, block.ID, block.DataSize)
 
 	if block.DataSize%2 != 0 {
-		util.ReadSingleByte(file)
+		fsutil.ReadSingleByte(file)
 	}
 	return block
 }
@@ -150,7 +150,7 @@ func parseResourceBlock(file *os.File, resourceId uint16, size uint32) parsedRes
 	case 1083:
 		fallthrough
 	case 1088:
-		descriptorVersion := util.ReadBytesLong(file)
+		descriptorVersion := fsutil.ReadBytesLong(file)
 		descriptorObject := descriptor.NewDescriptor()
 		descriptorObject.Parse(file)
 		descriptorObject.Version = descriptorVersion
@@ -163,7 +163,7 @@ func parseResourceBlock(file *os.File, resourceId uint16, size uint32) parsedRes
 		p = printFlagInfoObject
 		break
 	default:
-		util.ReadBytesNInt(file, size)
+		fsutil.ReadBytesNInt(file, size)
 		break
 	}
 	return p

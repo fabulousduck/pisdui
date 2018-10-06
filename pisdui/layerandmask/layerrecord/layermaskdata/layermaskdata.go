@@ -3,7 +3,7 @@ package layermaskdata
 import (
 	"os"
 
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
+	"github.com/pisdhooy/fsutil"
 )
 
 type LayerMaskData struct {
@@ -27,11 +27,11 @@ func NewLayerMaskData() *LayerMaskData {
 }
 
 func (layerMaskData *LayerMaskData) Parse(file *os.File) {
-	layerMaskData.Size = util.ReadBytesLong(file)
-	layerMaskData.Top = util.ReadBytesLong(file)
-	layerMaskData.Left = util.ReadBytesLong(file)
-	layerMaskData.Bottom = util.ReadBytesLong(file)
-	layerMaskData.Right = util.ReadBytesLong(file)
-	layerMaskData.DefaultColor = util.ReadSingleByte(file)
-	layerMaskData.MaskParameters = util.ReadSingleByte(file)
+	layerMaskData.Size = fsutil.ReadBytesLong(file)
+	layerMaskData.Top = fsutil.ReadBytesLong(file)
+	layerMaskData.Left = fsutil.ReadBytesLong(file)
+	layerMaskData.Bottom = fsutil.ReadBytesLong(file)
+	layerMaskData.Right = fsutil.ReadBytesLong(file)
+	layerMaskData.DefaultColor = fsutil.ReadSingleByte(file)
+	layerMaskData.MaskParameters = fsutil.ReadSingleByte(file)
 }

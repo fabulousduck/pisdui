@@ -3,7 +3,7 @@ package descriptor
 import (
 	"os"
 
-	util "github.com/fabulousduck/pisdui/pisdui/util/file"
+	"github.com/pisdhooy/fsutil"
 )
 
 type OsKeyBlock interface {
@@ -41,16 +41,16 @@ func NewDescriptor() *Descriptor {
 /*Parse parses data from a descriptor block in a PSD file into a premade descriptor*/
 func (descriptor *Descriptor) Parse(file *os.File) {
 
-	descriptor.UnicodeString = util.ParseUnicodeString(file)
+	descriptor.UnicodeString = fsutil.ParseUnicodeString(file)
 
-	classIDLength := util.ReadBytesLong(file)
+	classIDLength := fsutil.ReadBytesLong(file)
 
 	if classIDLength == 0 {
-		descriptor.ClassID = util.ReadBytesString(file, 4)
+		descriptor.ClassID = fsutil.ReadBytesString(file, 4)
 	} else {
-		descriptor.ClassID = util.ReadBytesString(file, int(classIDLength))
+		descriptor.ClassID = fsutil.ReadBytesString(file, int(classIDLength))
 	}
-	descriptor.ItemCount = util.ReadBytesLong(file)
+	descriptor.ItemCount = fsutil.ReadBytesLong(file)
 
 	var i uint32
 	for i = 0; i < descriptor.ItemCount; i++ {
@@ -61,14 +61,14 @@ func (descriptor *Descriptor) Parse(file *os.File) {
 
 func (descriptor *Descriptor) parseDescriptorItem(file *os.File) {
 	descriptorItem := new(descriptorItem)
-	length := util.ReadBytesLong(file)
+	length := fsutil.ReadBytesLong(file)
 	if length == 0 {
-		descriptorItem.key = util.ReadBytesString(file, 4)
+		descriptorItem.key = fsutil.ReadBytesString(file, 4)
 	} else {
-		descriptorItem.key = util.ReadBytesString(file, int(length))
+		descriptorItem.key = fsutil.ReadBytesString(file, int(length))
 	}
 
-	descriptorItem.osTypeKey = util.ReadBytesString(file, 4)
+	descriptorItem.osTypeKey = fsutil.ReadBytesString(file, 4)
 	descriptorItem.osKeyBlock = parseOsKeyType(file, descriptorItem.osTypeKey)
 	descriptor.Items = append(descriptor.Items, descriptorItem)
 }
@@ -159,9 +159,9 @@ func NewList() *List {
 }
 
 func (list *List) Parse(file *os.File) {
-	list.NumItems = util.ReadBytesLong(file)
+	list.NumItems = fsutil.ReadBytesLong(file)
 	for i := 0; i < int(list.NumItems); i++ {
-		listItemType := util.ReadBytesString(file, 4)
+		listItemType := fsutil.ReadBytesString(file, 4)
 		list.Items = append(list.Items, parseOsKeyType(file, listItemType))
 	}
 }
