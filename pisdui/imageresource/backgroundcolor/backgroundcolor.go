@@ -3,7 +3,7 @@ package backgroundcolor
 import (
 	"os"
 
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 type BackgroundColor struct {
@@ -25,14 +25,14 @@ func (backgroundColor *BackgroundColor) Parse(file *os.File) {
 
 	backgroundColor.parseColorSpaceID(file)
 	for i := 0; i < pixelDataLength; i++ {
-		intBuffer = append(intBuffer, fsutil.ReadBytesShort(file))
+		intBuffer = append(intBuffer, fmtbytes.ReadBytesShort(file))
 		// spew.Dump(intBuffer)
 	}
 	backgroundColor.ColorData = intBuffer
 }
 
 func (backgroundcolor *BackgroundColor) parseColorSpaceID(file *os.File) {
-	colorSpaceID := fsutil.ReadBytesShort(file)
+	colorSpaceID := fmtbytes.ReadBytesShort(file)
 	switch colorSpaceID {
 	case 0:
 		backgroundcolor.ColorSpaceId = "RGB"

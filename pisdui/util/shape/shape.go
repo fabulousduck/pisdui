@@ -3,7 +3,7 @@ package shape
 import (
 	"os"
 
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 type Rectangle struct {
@@ -18,15 +18,15 @@ func NewRectangle() *Rectangle {
 }
 
 func (rectangle *Rectangle) Parse(file *os.File) {
-	rectangle.Top = fsutil.ReadBytesLong(file)
-	rectangle.Left = fsutil.ReadBytesLong(file)
-	rectangle.Bottom = fsutil.ReadBytesLong(file)
-	rectangle.Right = fsutil.ReadBytesLong(file)
+	rectangle.Top = fmtbytes.ReadBytesLong(file)
+	rectangle.Left = fmtbytes.ReadBytesLong(file)
+	rectangle.Bottom = fmtbytes.ReadBytesLong(file)
+	rectangle.Right = fmtbytes.ReadBytesLong(file)
 }
 
 func (rectangle *Rectangle) ParseSliceFormat(file *os.File) {
-	rectangle.Left = fsutil.ReadBytesLong(file)
-	rectangle.Top = fsutil.ReadBytesLong(file)
-	rectangle.Right = fsutil.ReadBytesLong(file)
-	rectangle.Bottom = fsutil.ReadBytesLong(file)
+	rectangle.Left = fmtbytes.ReadBytesLong(file)
+	rectangle.Top = fmtbytes.ReadBytesLong(file)
+	rectangle.Right = fmtbytes.ReadBytesLong(file)
+	rectangle.Bottom = fmtbytes.ReadBytesLong(file)
 }

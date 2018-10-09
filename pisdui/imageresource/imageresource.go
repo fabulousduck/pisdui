@@ -7,7 +7,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 	"github.com/pisdhooy/icc"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/backgroundcolor"
@@ -59,7 +59,7 @@ func NewData() *Data {
 //Parse will read all image resources located in
 //the photoshop file and will read them into the ImageResources struct
 func (resourceBlockSection *Data) Parse(file *os.File) error {
-	resourceBlockSection.Length = fsutil.ReadBytesLong(file)
+	resourceBlockSection.Length = fmtbytes.ReadBytesLong(file)
 
 	currPos, _ := file.Seek(0, 1)
 	endPos := currPos + int64(resourceBlockSection.Length)
@@ -77,19 +77,19 @@ func (resourceBlockSection *Data) Parse(file *os.File) error {
 
 func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlock {
 	block := new(ResourceBlock)
-	block.Signature = fsutil.ReadBytesString(file, 4)
+	block.Signature = fmtbytes.ReadBytesString(file, 4)
 
-	block.ID = fsutil.ReadBytesShort(file)
+	block.ID = fmtbytes.ReadBytesShort(file)
 
-	pascalString := fsutil.ParsePascalString(file)
+	pascalString := fmtbytes.ParsePascalString(file)
 
 	block.PascalString = pascalString
-	block.DataSize = fsutil.ReadBytesLong(file)
+	block.DataSize = fmtbytes.ReadBytesLong(file)
 
 	block.ParsedResourceBlock = parseResourceBlock(file, block.ID, block.DataSize)
 
 	if block.DataSize%2 != 0 {
-		fsutil.ReadSingleByte(file)
+		fmtbytes.ReadSingleByte(file)
 	}
 	return block
 }
@@ -150,7 +150,7 @@ func parseResourceBlock(file *os.File, resourceId uint16, size uint32) parsedRes
 	case 1083:
 		fallthrough
 	case 1088:
-		descriptorVersion := fsutil.ReadBytesLong(file)
+		descriptorVersion := fmtbytes.ReadBytesLong(file)
 		descriptorObject := descriptor.NewDescriptor()
 		descriptorObject.Parse(file)
 		descriptorObject.Version = descriptorVersion
@@ -163,7 +163,7 @@ func parseResourceBlock(file *os.File, resourceId uint16, size uint32) parsedRes
 		p = printFlagInfoObject
 		break
 	default:
-		fsutil.ReadBytesNInt(file, size)
+		fmtbytes.ReadBytesNInt(file, size)
 		break
 	}
 	return p

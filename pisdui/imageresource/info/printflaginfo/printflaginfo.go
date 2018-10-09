@@ -3,7 +3,7 @@ package printflaginfo
 import (
 	"os"
 
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 type PrintFlagInfo struct {
@@ -23,9 +23,9 @@ func NewPrintFlagInfo() *PrintFlagInfo {
 }
 
 func (printFlagInfo *PrintFlagInfo) Parse(file *os.File) {
-	printFlagInfo.Version = fsutil.ReadBytesShort(file)
-	printFlagInfo.CenterCrop = fsutil.ReadSingleByte(file)
-	printFlagInfo.BufferByte = fsutil.ReadSingleByte(file)
-	printFlagInfo.BleedWidth = fsutil.ReadBytesLong(file)
-	printFlagInfo.BleedWidthScale = fsutil.ReadBytesShort(file)
+	printFlagInfo.Version = fmtbytes.ReadBytesShort(file)
+	printFlagInfo.CenterCrop = fmtbytes.ReadSingleByte(file)
+	printFlagInfo.BufferByte = fmtbytes.ReadSingleByte(file)
+	printFlagInfo.BleedWidth = fmtbytes.ReadBytesLong(file)
+	printFlagInfo.BleedWidthScale = fmtbytes.ReadBytesShort(file)
 }

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 /*Data contains all header information
@@ -55,7 +55,7 @@ func (fh *Data) writeSignature(fp *os.File) error {
 }
 
 func (fh *Data) readSignature(file *os.File) {
-	signature := fsutil.ReadBytesString(file, 4)
+	signature := fmtbytes.ReadBytesString(file, 4)
 	if signature != "8BPS" {
 		panic("Invalid header signature. got-" + signature + "-Expected 8BPS")
 	}
@@ -63,7 +63,7 @@ func (fh *Data) readSignature(file *os.File) {
 }
 
 func (fh *Data) readVersion(file *os.File) {
-	version := fsutil.ReadBytesShort(file)
+	version := fmtbytes.ReadBytesShort(file)
 	if version != 1 {
 		panic("Invalid file version.")
 	}
@@ -71,12 +71,12 @@ func (fh *Data) readVersion(file *os.File) {
 }
 
 func (fh *Data) readReserved(file *os.File) {
-	reserved := fsutil.ReadBytesNInt(file, 6)
+	reserved := fmtbytes.ReadBytesNInt(file, 6)
 	fh.Reserved = reserved
 }
 
 func (fh *Data) readChannels(file *os.File) {
-	channels := fsutil.ReadBytesShort(file)
+	channels := fmtbytes.ReadBytesShort(file)
 	if channels < 1 || channels > 56 {
 		panic("header channels out of range")
 	}
@@ -84,8 +84,8 @@ func (fh *Data) readChannels(file *os.File) {
 }
 
 func (fh *Data) readDimensions(file *os.File) {
-	height := fsutil.ReadBytesLong(file)
-	width := fsutil.ReadBytesLong(file)
+	height := fmtbytes.ReadBytesLong(file)
+	width := fmtbytes.ReadBytesLong(file)
 	if width < 1 || width > 30000 || height < 1 || height > 30000 {
 		panic("invalid file dimensions")
 	}
@@ -95,7 +95,7 @@ func (fh *Data) readDimensions(file *os.File) {
 }
 
 func (fh *Data) readDepth(file *os.File) {
-	depth := fsutil.ReadBytesShort(file)
+	depth := fmtbytes.ReadBytesShort(file)
 	fh.Depth = depth
 }
 
@@ -112,6 +112,6 @@ func (fh *Data) readColorMode(file *os.File) {
 		9: "Lab",
 	}
 
-	colorMode := fsutil.ReadBytesShort(file)
+	colorMode := fmtbytes.ReadBytesShort(file)
 	fh.ColorMode = colorModes[colorMode]
 }

@@ -5,7 +5,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/fabulousduck/pisdui/pisdui/layerandmask/layerinfo"
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 //Data contains the photoshop files
@@ -43,7 +43,7 @@ func NewData() *Data {
 
 func (layerandmaskobject *Data) Parse(file *os.File) {
 	spew.Dump(file.Seek(0, 1))
-	layerandmaskobject.Length = fsutil.ReadBytesLong(file)
+	layerandmaskobject.Length = fmtbytes.ReadBytesLong(file)
 	layerInfoObject := layerinfo.NewLayerInfo()
 	layerInfoObject.Parse(file)
 	layerandmaskobject.LayerInfo = layerInfoObject

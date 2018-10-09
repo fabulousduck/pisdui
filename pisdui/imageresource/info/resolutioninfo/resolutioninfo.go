@@ -3,7 +3,7 @@ package resolutioninfo
 import (
 	"os"
 
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 //Note: HorizontalResolution and VerticalResolution are byte buffers as they are fixed point integers
@@ -25,12 +25,12 @@ func NewResolutionInfo() *Resolutioninfo {
 }
 
 func (resolutioninfo *Resolutioninfo) Parse(file *os.File) {
-	resolutioninfo.HorizontalResolution = parseFixedPoint(fsutil.ReadRawBytes(file, 4))
-	resolutioninfo.HorizontalResolutionUnit = parseUnit(fsutil.ReadBytesShort(file))
-	resolutioninfo.WidthResolutionUnit = parseUnit(fsutil.ReadBytesShort(file))
-	resolutioninfo.VerticalResolution = parseFixedPoint(fsutil.ReadRawBytes(file, 4))
-	resolutioninfo.VerticalResolutionUnit = parseUnit(fsutil.ReadBytesShort(file))
-	resolutioninfo.HeightUnit = parseUnit(fsutil.ReadBytesShort(file))
+	resolutioninfo.HorizontalResolution = parseFixedPoint(fmtbytes.ReadRawBytes(file, 4))
+	resolutioninfo.HorizontalResolutionUnit = parseUnit(fmtbytes.ReadBytesShort(file))
+	resolutioninfo.WidthResolutionUnit = parseUnit(fmtbytes.ReadBytesShort(file))
+	resolutioninfo.VerticalResolution = parseFixedPoint(fmtbytes.ReadRawBytes(file, 4))
+	resolutioninfo.VerticalResolutionUnit = parseUnit(fmtbytes.ReadBytesShort(file))
+	resolutioninfo.HeightUnit = parseUnit(fmtbytes.ReadBytesShort(file))
 }
 
 func parseUnit(unit uint16) string {

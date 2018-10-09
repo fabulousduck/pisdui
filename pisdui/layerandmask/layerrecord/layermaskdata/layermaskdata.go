@@ -3,7 +3,7 @@ package layermaskdata
 import (
 	"os"
 
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 type LayerMaskData struct {
@@ -27,11 +27,11 @@ func NewLayerMaskData() *LayerMaskData {
 }
 
 func (layerMaskData *LayerMaskData) Parse(file *os.File) {
-	layerMaskData.Size = fsutil.ReadBytesLong(file)
-	layerMaskData.Top = fsutil.ReadBytesLong(file)
-	layerMaskData.Left = fsutil.ReadBytesLong(file)
-	layerMaskData.Bottom = fsutil.ReadBytesLong(file)
-	layerMaskData.Right = fsutil.ReadBytesLong(file)
-	layerMaskData.DefaultColor = fsutil.ReadSingleByte(file)
-	layerMaskData.MaskParameters = fsutil.ReadSingleByte(file)
+	layerMaskData.Size = fmtbytes.ReadBytesLong(file)
+	layerMaskData.Top = fmtbytes.ReadBytesLong(file)
+	layerMaskData.Left = fmtbytes.ReadBytesLong(file)
+	layerMaskData.Bottom = fmtbytes.ReadBytesLong(file)
+	layerMaskData.Right = fmtbytes.ReadBytesLong(file)
+	layerMaskData.DefaultColor = fmtbytes.ReadSingleByte(file)
+	layerMaskData.MaskParameters = fmtbytes.ReadSingleByte(file)
 }

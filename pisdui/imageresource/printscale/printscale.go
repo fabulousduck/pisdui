@@ -3,7 +3,7 @@ package printscale
 import (
 	"os"
 
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 type PrintScale struct {
@@ -23,13 +23,13 @@ func NewPrintScale() *PrintScale {
 
 func (printScale *PrintScale) Parse(file *os.File) {
 	printScale.parseStyle(file)
-	printScale.XLocation = fsutil.ReadFloat(file)
-	printScale.YLocation = fsutil.ReadFloat(file)
-	printScale.Scale = fsutil.ReadFloat(file)
+	printScale.XLocation = fmtbytes.ReadFloat(file)
+	printScale.YLocation = fmtbytes.ReadFloat(file)
+	printScale.Scale = fmtbytes.ReadFloat(file)
 }
 
 func (printscale *PrintScale) parseStyle(file *os.File) {
-	style := fsutil.ReadBytesShort(file)
+	style := fmtbytes.ReadBytesShort(file)
 	switch style {
 	case 0:
 		printscale.Style = "centered"

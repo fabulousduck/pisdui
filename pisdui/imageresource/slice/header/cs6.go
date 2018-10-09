@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/util/shape"
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 type HeaderCS6 struct {
@@ -22,6 +22,6 @@ func (header *HeaderCS6) Parse(file *os.File) {
 	rectangleObject := shape.NewRectangle()
 	rectangleObject.Parse(file)
 	header.BoundingRectangle = rectangleObject
-	header.GroupName = fsutil.ParseUnicodeString(file)
-	header.NumSlices = fsutil.ReadBytesLong(file)
+	header.GroupName = fmtbytes.ParseUnicodeString(file)
+	header.NumSlices = fmtbytes.ReadBytesLong(file)
 }

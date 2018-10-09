@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor"
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 //HeaderCS7 is for both CS7 and CS8.
@@ -23,7 +23,7 @@ func (header *HeaderCS7) Parse(file *os.File) {
 	descriptorObject := descriptor.NewDescriptor()
 
 	header.Version = 6
-	header.DescriptorVersion = fsutil.ReadBytesLong(file)
+	header.DescriptorVersion = fmtbytes.ReadBytesLong(file)
 	descriptorObject.Parse(file)
 	header.Descriptor = descriptorObject
 }

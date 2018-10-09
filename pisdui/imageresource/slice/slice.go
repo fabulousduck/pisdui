@@ -6,7 +6,7 @@ import (
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/descriptor"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/slice/header"
 	"github.com/fabulousduck/pisdui/pisdui/util/shape"
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 type Slice struct {
@@ -47,7 +47,7 @@ func NewSlice() *Slice {
 }
 
 func (slice *Slice) Parse(file *os.File) {
-	headerVersion := fsutil.ReadBytesLong(file)
+	headerVersion := fmtbytes.ReadBytesLong(file)
 	slice.Header = header.ParseHeader(file, headerVersion)
 	switch headerVersion {
 	case 6:
@@ -73,32 +73,32 @@ func NewBlock() *Block {
 func (block *Block) Parse(file *os.File) {
 	dimensionsObject := shape.NewRectangle()
 	descriptorObject := descriptor.NewDescriptor()
-	block.ID = fsutil.ReadBytesLong(file)
-	block.GroupID = fsutil.ReadBytesLong(file)
-	block.Origin = fsutil.ReadBytesLong(file)
+	block.ID = fmtbytes.ReadBytesLong(file)
+	block.GroupID = fmtbytes.ReadBytesLong(file)
+	block.Origin = fmtbytes.ReadBytesLong(file)
 	if block.Origin == 1 {
-		block.AssocLayerID = fsutil.ReadBytesLong(file)
+		block.AssocLayerID = fmtbytes.ReadBytesLong(file)
 	}
-	block.Name = fsutil.ParseUnicodeString(file)
-	block.Type = fsutil.ReadBytesLong(file)
+	block.Name = fmtbytes.ParseUnicodeString(file)
+	block.Type = fmtbytes.ReadBytesLong(file)
 
 	dimensionsObject.ParseSliceFormat(file)
 
 	block.Dimensions = dimensionsObject
 
-	block.Url = fsutil.ParseUnicodeString(file)
-	block.Target = fsutil.ParseUnicodeString(file)
-	block.Message = fsutil.ParseUnicodeString(file)
-	block.AltTag = fsutil.ParseUnicodeString(file)
-	block.CellTextIsHTML = fsutil.ReadSingleByte(file) == 1
-	block.CellText = fsutil.ParseUnicodeString(file)
-	block.HorizontalAlignment = fsutil.ReadBytesLong(file)
-	block.VerticalAlignment = fsutil.ReadBytesLong(file)
-	block.AlphaColor = fsutil.ReadSingleByte(file)
-	block.Red = fsutil.ReadSingleByte(file)
-	block.Green = fsutil.ReadSingleByte(file)
-	block.Blue = fsutil.ReadSingleByte(file)
-	block.DescriptorVersion = fsutil.ReadBytesLong(file)
+	block.Url = fmtbytes.ParseUnicodeString(file)
+	block.Target = fmtbytes.ParseUnicodeString(file)
+	block.Message = fmtbytes.ParseUnicodeString(file)
+	block.AltTag = fmtbytes.ParseUnicodeString(file)
+	block.CellTextIsHTML = fmtbytes.ReadSingleByte(file) == 1
+	block.CellText = fmtbytes.ParseUnicodeString(file)
+	block.HorizontalAlignment = fmtbytes.ReadBytesLong(file)
+	block.VerticalAlignment = fmtbytes.ReadBytesLong(file)
+	block.AlphaColor = fmtbytes.ReadSingleByte(file)
+	block.Red = fmtbytes.ReadSingleByte(file)
+	block.Green = fmtbytes.ReadSingleByte(file)
+	block.Blue = fmtbytes.ReadSingleByte(file)
+	block.DescriptorVersion = fmtbytes.ReadBytesLong(file)
 
 	descriptorObject.Parse(file)
 

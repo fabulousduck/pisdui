@@ -3,7 +3,7 @@ package printflags
 import (
 	"os"
 
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 type PrintFlags struct {
@@ -28,13 +28,13 @@ func NewPrintFlags() *PrintFlags {
 }
 
 func (printFlags *PrintFlags) Parse(file *os.File) {
-	printFlags.Labels = fsutil.ReadSingleByte(file) != 0
-	printFlags.CropMarks = fsutil.ReadSingleByte(file) != 0
-	printFlags.ColorBars = fsutil.ReadSingleByte(file) != 0
-	printFlags.RegistrationMarks = fsutil.ReadSingleByte(file) != 0
-	printFlags.Negative = fsutil.ReadSingleByte(file) != 0
-	printFlags.Flip = fsutil.ReadSingleByte(file) != 0
-	printFlags.Interpolate = fsutil.ReadSingleByte(file) != 0
-	printFlags.Caption = fsutil.ReadSingleByte(file) != 0
-	printFlags.MysteryByte = fsutil.ReadSingleByte(file) != 0
+	printFlags.Labels = fmtbytes.ReadSingleByte(file) != 0
+	printFlags.CropMarks = fmtbytes.ReadSingleByte(file) != 0
+	printFlags.ColorBars = fmtbytes.ReadSingleByte(file) != 0
+	printFlags.RegistrationMarks = fmtbytes.ReadSingleByte(file) != 0
+	printFlags.Negative = fmtbytes.ReadSingleByte(file) != 0
+	printFlags.Flip = fmtbytes.ReadSingleByte(file) != 0
+	printFlags.Interpolate = fmtbytes.ReadSingleByte(file) != 0
+	printFlags.Caption = fmtbytes.ReadSingleByte(file) != 0
+	printFlags.MysteryByte = fmtbytes.ReadSingleByte(file) != 0
 }

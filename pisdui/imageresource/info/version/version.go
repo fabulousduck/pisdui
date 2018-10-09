@@ -3,7 +3,7 @@ package version
 import (
 	"os"
 
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 type Version struct {
@@ -23,9 +23,9 @@ func NewVersion() *Version {
 }
 
 func (version *Version) Parse(file *os.File) {
-	version.Key = fsutil.ReadBytesLong(file)
-	version.HasRealMergedData = fsutil.ReadSingleByte(file)
-	version.WriterName = fsutil.ParseUnicodeString(file)
-	version.ReaderName = fsutil.ParseUnicodeString(file)
-	version.FileVersion = fsutil.ReadBytesLong(file)
+	version.Key = fmtbytes.ReadBytesLong(file)
+	version.HasRealMergedData = fmtbytes.ReadSingleByte(file)
+	version.WriterName = fmtbytes.ParseUnicodeString(file)
+	version.ReaderName = fmtbytes.ParseUnicodeString(file)
+	version.FileVersion = fmtbytes.ReadBytesLong(file)
 }

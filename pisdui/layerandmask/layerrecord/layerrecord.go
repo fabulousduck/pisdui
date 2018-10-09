@@ -6,7 +6,7 @@ import (
 	"github.com/fabulousduck/pisdui/pisdui/layerandmask/layerrecord/channelinfo"
 	"github.com/fabulousduck/pisdui/pisdui/layerandmask/layerrecord/layerblendingranges"
 	"github.com/fabulousduck/pisdui/pisdui/layerandmask/layerrecord/layermaskdata"
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 //LayerRecord represents a layer in
@@ -34,23 +34,23 @@ func NewLayerRecord() *LayerRecord {
 }
 
 func (layerRecord *LayerRecord) Parse(file *os.File) {
-	layerRecord.Top = fsutil.ReadBytesLong(file)
-	layerRecord.Left = fsutil.ReadBytesLong(file)
-	layerRecord.Bottom = fsutil.ReadBytesLong(file)
-	layerRecord.Right = fsutil.ReadBytesLong(file)
-	layerRecord.ChannelCount = fsutil.ReadBytesShort(file)
+	layerRecord.Top = fmtbytes.ReadBytesLong(file)
+	layerRecord.Left = fmtbytes.ReadBytesLong(file)
+	layerRecord.Bottom = fmtbytes.ReadBytesLong(file)
+	layerRecord.Right = fmtbytes.ReadBytesLong(file)
+	layerRecord.ChannelCount = fmtbytes.ReadBytesShort(file)
 
 	layerChannelInfoObject := channelinfo.NewChannelInfo()
 	layerChannelInfoObject.Parse(file)
 	layerRecord.ChannelInfo = layerChannelInfoObject
 
-	layerRecord.BlendModeSignature = fsutil.ReadBytesLong(file)
-	layerRecord.BlendModeKey = fsutil.ReadBytesString(file, 4)
-	layerRecord.Opacity = fsutil.ReadSingleByte(file)
-	layerRecord.Clipping = fsutil.ReadSingleByte(file)
-	layerRecord.Flags = fsutil.ReadSingleByte(file) //TODO: do this properly filler
-	fsutil.ReadSingleByte(file)
-	layerRecord.ExtraFieldLength = fsutil.ReadBytesLong(file)
+	layerRecord.BlendModeSignature = fmtbytes.ReadBytesLong(file)
+	layerRecord.BlendModeKey = fmtbytes.ReadBytesString(file, 4)
+	layerRecord.Opacity = fmtbytes.ReadSingleByte(file)
+	layerRecord.Clipping = fmtbytes.ReadSingleByte(file)
+	layerRecord.Flags = fmtbytes.ReadSingleByte(file) //TODO: do this properly filler
+	fmtbytes.ReadSingleByte(file)
+	layerRecord.ExtraFieldLength = fmtbytes.ReadBytesLong(file)
 
 	layerMaskDataObject := layermaskdata.NewLayerMaskData()
 	layerMaskDataObject.Parse(file)

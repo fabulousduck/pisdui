@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/layerandmask/layerrecord"
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 //LayerInfo contains information about
@@ -26,8 +26,8 @@ func NewLayerInfo() *LayerInfo {
 }
 
 func (layerinfo *LayerInfo) Parse(file *os.File) {
-	layerinfo.Length = fsutil.ReadBytesLong(file)
-	layerinfo.LayerCount = fsutil.ReadBytesShort(file)
+	layerinfo.Length = fmtbytes.ReadBytesLong(file)
+	layerinfo.LayerCount = fmtbytes.ReadBytesShort(file)
 	for i := 0; i < int(layerinfo.LayerCount); i++ {
 		layer := layerrecord.NewLayerRecord()
 		layer.Parse(file)

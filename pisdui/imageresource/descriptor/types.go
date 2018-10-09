@@ -6,7 +6,7 @@ package descriptor
 import (
 	"os"
 
-	"github.com/pisdhooy/fsutil"
+	"github.com/pisdhooy/fmtbytes"
 )
 
 type Reference struct {
@@ -28,7 +28,7 @@ func NewReference() *Reference {
 }
 
 func (reference *Reference) Parse(file *os.File) {
-	reference.ItemCount = fsutil.ReadBytesLong(file)
+	reference.ItemCount = fmtbytes.ReadBytesLong(file)
 	var i uint32
 	for i = 0; i < reference.ItemCount; i++ {
 		referenceItem := new(ReferenceItem)
@@ -38,7 +38,7 @@ func (reference *Reference) Parse(file *os.File) {
 }
 
 func (referenceItem *ReferenceItem) Parse(file *os.File) {
-	referenceItem.OsTypeKey = fsutil.ReadBytesString(file, 4)
+	referenceItem.OsTypeKey = fmtbytes.ReadBytesString(file, 4)
 	referenceItem.OsKeyBlock = parseReferenceOsKeyBlock(file, referenceItem.OsTypeKey)
 }
 
@@ -55,7 +55,7 @@ func NewBool() *Bool {
 }
 
 func (Bool *Bool) Parse(file *os.File) {
-	Bool.Value = int(fsutil.ReadSingleByte(file)) == 1
+	Bool.Value = int(fmtbytes.ReadSingleByte(file)) == 1
 }
 
 type Enum struct {
@@ -72,18 +72,18 @@ func NewEnum() *Enum {
 }
 
 func (enum *Enum) Parse(file *os.File) {
-	typeLength := fsutil.ReadBytesLong(file)
+	typeLength := fmtbytes.ReadBytesLong(file)
 	if typeLength < 1 {
-		enum.Type = fsutil.ReadBytesString(file, 4)
+		enum.Type = fmtbytes.ReadBytesString(file, 4)
 	} else {
-		enum.Type = fsutil.ReadBytesString(file, int(typeLength))
+		enum.Type = fmtbytes.ReadBytesString(file, int(typeLength))
 	}
 
-	enumLength := fsutil.ReadBytesLong(file)
+	enumLength := fmtbytes.ReadBytesLong(file)
 	if enumLength < 1 {
-		enum.Value = fsutil.ReadBytesString(file, 4)
+		enum.Value = fmtbytes.ReadBytesString(file, 4)
 	} else {
-		enum.Value = fsutil.ReadBytesString(file, int(enumLength))
+		enum.Value = fmtbytes.ReadBytesString(file, int(enumLength))
 	}
 
 }
@@ -101,7 +101,7 @@ func NewText() *Text {
 }
 
 func (text *Text) Parse(file *os.File) {
-	text.Value = fsutil.ParseUnicodeString(file)
+	text.Value = fmtbytes.ParseUnicodeString(file)
 }
 
 type Double struct {
@@ -117,7 +117,7 @@ func NewDouble() *Double {
 }
 
 func (double *Double) Parse(file *os.File) error {
-	value, err := fsutil.ReadDouble(file)
+	value, err := fmtbytes.ReadDouble(file)
 	if err != nil {
 		return err
 	}
@@ -140,8 +140,8 @@ func NewUnitFloat() *Unitfloat {
 }
 
 func (unitFloat *Unitfloat) Parse(file *os.File) error {
-	unitFloat.UnitType = fsutil.ReadBytesString(file, 4)
-	double, err := fsutil.ReadDouble(file)
+	unitFloat.UnitType = fmtbytes.ReadBytesString(file, 4)
+	double, err := fmtbytes.ReadDouble(file)
 	if err == nil {
 		return err
 	}
@@ -162,5 +162,5 @@ func NewInteger() *Integer {
 }
 
 func (integer *Integer) Parse(file *os.File) {
-	integer.Value = fsutil.ReadBytesLong(file)
+	integer.Value = fmtbytes.ReadBytesLong(file)
 }
