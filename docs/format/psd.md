@@ -65,6 +65,10 @@ The structure of a .psd file is devided into five sections
 
 ## Image resources
 
+Image resources are blocks of individual data that are global to the .PSD file. These blocks can contain data such as grayscaling, ICC profiles and print info and many more.
+
+A table below shows what data can be found and their tags
+
 ## Layer and mask information
 
 ## Image data
