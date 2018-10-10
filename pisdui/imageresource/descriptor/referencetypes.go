@@ -41,7 +41,9 @@ func parseReferenceOsKeyBlock(file *os.File, osKeyID string) referenceOsKeyBlock
 		break
 	case "Idnt":
 		//TODO figure out by looking at hex map
+
 		fmt.Printf("idnt index : ")
+		panic("indt")
 		break
 	case "indx":
 		fmt.Printf("idx index : ")

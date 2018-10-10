@@ -14,6 +14,7 @@ import (
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/id"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/measurementscale"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/pixelaspectratio"
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/sec"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/slice"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/printflags"
@@ -126,6 +127,11 @@ func parseResourceBlock(file *os.File, resourceId uint16, size uint32) parsedRes
 		versionObject := version.NewVersion()
 		versionObject.Parse(file)
 		p = versionObject
+	case 1061:
+		DigestObject := sec.NewSec()
+		DigestObject.Parse(file)
+		spew.Dump(DigestObject)
+		p = DigestObject
 	case 1062:
 		printScaleObject := printscale.NewPrintScale()
 		printScaleObject.Parse(file)
@@ -163,6 +169,8 @@ func parseResourceBlock(file *os.File, resourceId uint16, size uint32) parsedRes
 		p = printFlagInfoObject
 		break
 	default:
+		spew.Dump(resourceId)
+
 		fmtbytes.ReadBytesNInt(file, size)
 		break
 	}
