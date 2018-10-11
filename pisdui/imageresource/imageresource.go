@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
+
 	"github.com/pisdhooy/fmtbytes"
 	"github.com/pisdhooy/icc"
 
@@ -97,6 +99,7 @@ func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlo
 
 func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parsedResourceBlock {
 	var p parsedResourceBlock
+	spew.Dump(resourceId)
 	switch resourceId {
 	case 1005:
 		resolutioninfoObject := resolutioninfo.NewResolutionInfo()
@@ -128,8 +131,9 @@ func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parse
 		p = versionObject
 	case 1060:
 		XMPObject := xmp.NewXMP()
-		XMPObject.Parse(file)
+		XMPObject.Parse(file, size)
 		p = XMPObject
+		spew.Dump(file.Seek(0, 1))
 	case 1061:
 		DigestObject := sec.NewSec()
 		DigestObject.Parse(file)
@@ -172,7 +176,7 @@ func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parse
 		p = printFlagInfoObject
 		break
 	default:
-
+		fmt.Printf("sig : %d dataSize %d\n", resourceId, size)
 		fmtbytes.ReadBytesNInt(file, size)
 		break
 	}

@@ -1,12 +1,11 @@
 package xmp
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/pisdhooy/fmtbytes"
-
 	"github.com/davecgh/go-spew/spew"
+
+	"github.com/pisdhooy/fmtbytes"
 
 	"trimmer.io/go-xmp/xmp"
 )
@@ -23,13 +22,20 @@ func NewXMP() *XMP {
 	return new(XMP)
 }
 
-func (XMP *XMP) Parse(file *os.File) {
+func (XMP *XMP) Parse(file *os.File, size uint32) {
+
+	tmpFP, _ := file.Seek(0, 1)
 	document, err := xmp.Read(file)
 	if err != nil {
 		panic(err)
 	}
-	fmtbytes.ReadRawBytes(file, 10112)
-	fmt.Println("XMP FP POS")
-	spew.Dump(file.Seek(0, 1))
+
+	file.Seek(tmpFP, 1)
+	data := fmtbytes.ReadRawBytes(file, int(size))
+
+	newOffset := int(tmpFP) + len(data)
+	spew.Dump(int64(newOffset))
+	file.Seek(int64(newOffset), 0)
 	XMP.Values = document
+
 }
