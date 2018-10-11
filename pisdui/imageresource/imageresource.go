@@ -16,6 +16,7 @@ import (
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/pixelaspectratio"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/sec"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/slice"
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/xmp"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/printflags"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/printscale"
@@ -69,6 +70,7 @@ func (resourceBlockSection *Data) Parse(file *os.File) error {
 		pos, _ := file.Seek(0, 1)
 		currPos = pos
 		if resourceBlockSection.ResourceBlocks[len(resourceBlockSection.ResourceBlocks)-1].Signature != "8BIM" {
+
 			return errors.New("non 8BIM signature")
 		}
 	}
@@ -87,7 +89,7 @@ func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlo
 	block.PascalString = pascalString
 	block.DataSize = fmtbytes.ReadBytesLong(file)
 
-	block.ParsedResourceBlock = parseResourceBlock(file, block.ID, block.DataSize)
+	block.ParsedResourceBlock = parseResourceBlockData(file, block.ID, block.DataSize)
 
 	if block.DataSize%2 != 0 {
 		fmtbytes.ReadSingleByte(file)
@@ -95,8 +97,9 @@ func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlo
 	return block
 }
 
-func parseResourceBlock(file *os.File, resourceId uint16, size uint32) parsedResourceBlock {
+func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parsedResourceBlock {
 	var p parsedResourceBlock
+	spew.Dump(resourceId)
 	switch resourceId {
 	case 1005:
 		resolutioninfoObject := resolutioninfo.NewResolutionInfo()
@@ -113,7 +116,6 @@ func parseResourceBlock(file *os.File, resourceId uint16, size uint32) parsedRes
 	case 1039:
 		ICCProfileObject := icc.NewICCProfile()
 		ICCProfileObject.Parse(file)
-		spew.Dump(ICCProfileObject)
 		p = ICCProfileObject
 	case 1044:
 		IDObject := id.NewID()
@@ -127,10 +129,14 @@ func parseResourceBlock(file *os.File, resourceId uint16, size uint32) parsedRes
 		versionObject := version.NewVersion()
 		versionObject.Parse(file)
 		p = versionObject
+	case 1060:
+		XMPObject := xmp.NewXMP()
+		XMPObject.Parse(file, size)
+		p = XMPObject
+		spew.Dump(file.Seek(0, 1))
 	case 1061:
 		DigestObject := sec.NewSec()
 		DigestObject.Parse(file)
-		spew.Dump(DigestObject)
 		p = DigestObject
 	case 1062:
 		printScaleObject := printscale.NewPrintScale()
@@ -156,6 +162,7 @@ func parseResourceBlock(file *os.File, resourceId uint16, size uint32) parsedRes
 	case 1083:
 		fallthrough
 	case 1088:
+		fmt.Println("PRINT VERSION PARSE")
 		descriptorVersion := fmtbytes.ReadBytesLong(file)
 		descriptorObject := descriptor.NewDescriptor()
 		descriptorObject.Parse(file)
@@ -169,10 +176,10 @@ func parseResourceBlock(file *os.File, resourceId uint16, size uint32) parsedRes
 		p = printFlagInfoObject
 		break
 	default:
-		spew.Dump(resourceId)
-
+		fmt.Printf("sig : %d dataSize %d\n", resourceId, size)
 		fmtbytes.ReadBytesNInt(file, size)
 		break
 	}
+
 	return p
 }
