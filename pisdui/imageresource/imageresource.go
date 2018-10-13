@@ -75,7 +75,6 @@ func (resourceBlockSection *Data) Parse(file *os.File) error {
 			return errors.New("non 8BIM signature")
 		}
 	}
-	spew.Dump(resourceBlockSection)
 	fmt.Println("pos after image resource block parsing : ", currPos)
 	return nil
 }
@@ -101,6 +100,7 @@ func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlo
 
 func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parsedResourceBlock {
 	var p parsedResourceBlock
+	fmt.Println("RESOURCE ID")
 	spew.Dump(resourceId)
 	//TODO split this up into seperate switches instead of one massive one
 	switch resourceId {
@@ -117,8 +117,6 @@ func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parse
 		printFlagsObject.Parse(file)
 		p = printFlagsObject
 	case 1039:
-		fmt.Println("EXPECT ICC SIZE")
-		spew.Dump(size)
 		ICCProfileObject := icc.NewICCProfile()
 		ICCProfileObject.Parse(file)
 		p = ICCProfileObject
@@ -172,7 +170,6 @@ func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parse
 	case 1083:
 		fallthrough
 	case 1088:
-		fmt.Println("PRINT VERSION PARSE")
 		descriptorVersion := fmtbytes.ReadBytesLong(file)
 		descriptorObject := descriptor.NewDescriptor()
 		descriptorObject.Parse(file)

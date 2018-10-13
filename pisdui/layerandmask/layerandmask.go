@@ -1,6 +1,7 @@
 package layerandmask
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/davecgh/go-spew/spew"
@@ -42,9 +43,11 @@ func NewData() *Data {
 }
 
 func (layerandmaskobject *Data) Parse(file *os.File) {
+	fmt.Println("LAYER INFO INDEX FP")
 	spew.Dump(file.Seek(0, 1))
 	layerandmaskobject.Length = fmtbytes.ReadBytesLong(file)
 	layerInfoObject := layerinfo.NewLayerInfo()
 	layerInfoObject.Parse(file)
 	layerandmaskobject.LayerInfo = layerInfoObject
+	spew.Dump(layerandmaskobject)
 }

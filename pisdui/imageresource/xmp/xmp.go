@@ -3,8 +3,6 @@ package xmp
 import (
 	"os"
 
-	"github.com/davecgh/go-spew/spew"
-
 	"github.com/pisdhooy/fmtbytes"
 
 	"trimmer.io/go-xmp/xmp"
@@ -34,7 +32,6 @@ func (XMP *XMP) Parse(file *os.File, size uint32) {
 	data := fmtbytes.ReadRawBytes(file, int(size))
 
 	newOffset := int(tmpFP) + len(data)
-	spew.Dump(int64(newOffset))
 	file.Seek(int64(newOffset), 0)
 	XMP.Values = document
 
