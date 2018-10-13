@@ -11,6 +11,7 @@ import (
 	"github.com/pisdhooy/icc"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/backgroundcolor"
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/exif"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/id"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/measurementscale"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/pixelaspectratio"
@@ -74,6 +75,7 @@ func (resourceBlockSection *Data) Parse(file *os.File) error {
 			return errors.New("non 8BIM signature")
 		}
 	}
+	spew.Dump(resourceBlockSection)
 	fmt.Println("pos after image resource block parsing : ", currPos)
 	return nil
 }
@@ -100,6 +102,7 @@ func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlo
 func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parsedResourceBlock {
 	var p parsedResourceBlock
 	spew.Dump(resourceId)
+	//TODO split this up into seperate switches instead of one massive one
 	switch resourceId {
 	case 1005:
 		resolutioninfoObject := resolutioninfo.NewResolutionInfo()
@@ -114,6 +117,8 @@ func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parse
 		printFlagsObject.Parse(file)
 		p = printFlagsObject
 	case 1039:
+		fmt.Println("EXPECT ICC SIZE")
+		spew.Dump(size)
 		ICCProfileObject := icc.NewICCProfile()
 		ICCProfileObject.Parse(file)
 		p = ICCProfileObject
@@ -129,6 +134,11 @@ func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parse
 		versionObject := version.NewVersion()
 		versionObject.Parse(file)
 		p = versionObject
+	case 1058:
+		spew.Dump(size)
+		exifObject := exif.NewExif()
+		exifObject.Parse(file, size)
+		p = exifObject
 	case 1060:
 		XMPObject := xmp.NewXMP()
 		XMPObject.Parse(file, size)
@@ -176,7 +186,6 @@ func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parse
 		p = printFlagInfoObject
 		break
 	default:
-		fmt.Printf("sig : %d dataSize %d\n", resourceId, size)
 		fmtbytes.ReadBytesNInt(file, size)
 		break
 	}
