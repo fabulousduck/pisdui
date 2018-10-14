@@ -54,7 +54,6 @@ type Data struct {
 	MeasurementSacle *measurementscale.MeasurementScale
 	Descriptor       *descriptor.Descriptor
 	PrintFlagInfo    *printflaginfo.PrintFlagInfo
-	ResourceBlocks   []*ResourceBlock
 }
 
 //ResourceBlock contains the raw unparsed data from
