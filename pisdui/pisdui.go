@@ -1,7 +1,6 @@
 package pisdui
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/fabulousduck/pisdui/pisdui/colormode"
@@ -29,21 +28,20 @@ func NewPSD(path string) (*PSD, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	return &PSD{Fp: file}, nil
+	psd := new(PSD)
+	psd.Fp = file
+	return psd, nil
 }
 
 // Parse takes the loaded file and parses it into
 // usable structs separated into the different main
 // parts of the file
 func (psd *PSD) Parse() error {
-	h := header.NewData()
-	h.Parse(psd.Fp)
-	psd.Header = h
+	psd.Header = header.NewData()
+	psd.Header.Parse(psd.Fp)
 
-	colorModeData := colormode.NewData()
-	colorModeData.Parse(psd.Fp, psd.Header.ColorMode)
-	psd.ColorModeData = colorModeData
+	psd.ColorModeData = colormode.NewData()
+	psd.ColorModeData.Parse(psd.Fp, psd.Header.ColorMode)
 
 	imageResourceData := imageresource.NewData()
 	err := imageResourceData.Parse(psd.Fp)
@@ -51,14 +49,8 @@ func (psd *PSD) Parse() error {
 		return err
 	}
 	psd.ImageResources = imageResourceData
-
-	f, _ := psd.Fp.Seek(0, 1)
-	fmt.Println(f)
-
-	layerAndMaskData := layerandmask.NewData()
-	layerAndMaskData.Parse(psd.Fp)
-	psd.LayerMaskInfo = layerAndMaskData
-	// spew.Dump(psd)
+	psd.LayerMaskInfo = layerandmask.NewData()
+	psd.LayerMaskInfo.Parse(psd.Fp)
 	return nil
 }
 
