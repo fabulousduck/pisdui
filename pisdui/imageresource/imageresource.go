@@ -12,6 +12,7 @@ import (
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/backgroundcolor"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/exif"
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/global/angle"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/id"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/measurementscale"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/pixelaspectratio"
@@ -100,8 +101,7 @@ func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlo
 
 func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parsedResourceBlock {
 	var p parsedResourceBlock
-	fmt.Println("RESOURCE ID")
-	spew.Dump(resourceId)
+
 	//TODO split this up into seperate switches instead of one massive one
 	switch resourceId {
 	case 1005:
@@ -116,6 +116,10 @@ func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parse
 		printFlagsObject := printflags.NewPrintFlags()
 		printFlagsObject.Parse(file)
 		p = printFlagsObject
+	case 1037:
+		angleObject := angle.NewAngle()
+		angleObject.Parse(file)
+		p = angleObject
 	case 1039:
 		ICCProfileObject := icc.NewICCProfile()
 		ICCProfileObject.Parse(file)
@@ -141,7 +145,6 @@ func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parse
 		XMPObject := xmp.NewXMP()
 		XMPObject.Parse(file, size)
 		p = XMPObject
-		spew.Dump(file.Seek(0, 1))
 	case 1061:
 		DigestObject := sec.NewSec()
 		DigestObject.Parse(file)
@@ -183,6 +186,8 @@ func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parse
 		p = printFlagInfoObject
 		break
 	default:
+		fmt.Println("RESOURCE ID")
+		spew.Dump(resourceId)
 		fmtbytes.ReadBytesNInt(file, size)
 		break
 	}
