@@ -1,7 +1,6 @@
 package imageresource
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
@@ -38,8 +37,24 @@ type parsedResourceBlock interface {
 //used by the photoshop file and the length of the
 //section in the photoshop file
 type Data struct {
-	Length         uint32
-	ResourceBlocks []*ResourceBlock
+	Length           uint32
+	ResolutionInfo   *resolutioninfo.Resolutioninfo
+	BackgroundColor  *backgroundcolor.BackgroundColor
+	PrintFlags       *printflags.PrintFlags
+	Angle            *angle.Angle
+	ICCProfile       *icc.ICCProfile
+	ID               *id.ID
+	Slice            *slice.Slice
+	Version          *version.Version
+	Exif             *exif.Exif
+	XMP              *xmp.XMP
+	Digest           *sec.Sec
+	Printscale       *printscale.PrintScale
+	Pixelaspectratio *pixelaspectratio.PixelAspectRatio
+	MeasurementSacle *measurementscale.MeasurementScale
+	Descriptor       *descriptor.Descriptor
+	PrintFlagInfo    *printflaginfo.PrintFlagInfo
+	ResourceBlocks   []*ResourceBlock
 }
 
 //ResourceBlock contains the raw unparsed data from
@@ -68,99 +83,68 @@ func (resourceBlockSection *Data) Parse(file *os.File) error {
 	currPos, _ := file.Seek(0, 1)
 	endPos := currPos + int64(resourceBlockSection.Length)
 	for currPos < endPos {
-		resourceBlockSection.ResourceBlocks = append(resourceBlockSection.ResourceBlocks, resourceBlockSection.parseResourceBlock(file))
+		resourceBlockSection.parseResourceBlockData(file)
 		pos, _ := file.Seek(0, 1)
 		currPos = pos
-		if resourceBlockSection.ResourceBlocks[len(resourceBlockSection.ResourceBlocks)-1].Signature != "8BIM" {
-
-			return errors.New("non 8BIM signature")
-		}
 	}
+	spew.Dump(resourceBlockSection)
 	fmt.Println("pos after image resource block parsing : ", currPos)
 	return nil
 }
 
-func (resourceBlockSection *Data) parseResourceBlock(file *os.File) *ResourceBlock {
-	block := new(ResourceBlock)
-	block.Signature = fmtbytes.ReadBytesString(file, 4)
-
-	block.ID = fmtbytes.ReadBytesShort(file)
-
-	pascalString := fmtbytes.ParsePascalString(file)
-
-	block.PascalString = pascalString
-	block.DataSize = fmtbytes.ReadBytesLong(file)
-
-	block.ParsedResourceBlock = parseResourceBlockData(file, block.ID, block.DataSize)
-
-	if block.DataSize%2 != 0 {
-		fmtbytes.ReadSingleByte(file)
+func (imageResourceData *Data) parseResourceBlockData(file *os.File) {
+	signature := fmtbytes.ReadBytesString(file, 4)
+	if signature != "8BIM" {
+		panic("non 8BIM resource block found")
 	}
-	return block
-}
-
-func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parsedResourceBlock {
-	var p parsedResourceBlock
-
+	resourceID := fmtbytes.ReadBytesShort(file)
+	pascalString := fmtbytes.ParsePascalString(file)
+	pascalString = pascalString
+	size := fmtbytes.ReadBytesLong(file)
 	//TODO split this up into seperate switches instead of one massive one
-	switch resourceId {
+	switch resourceID {
 	case 1005:
-		resolutioninfoObject := resolutioninfo.NewResolutionInfo()
-		resolutioninfoObject.Parse(file)
-		p = resolutioninfoObject
+		imageResourceData.ResolutionInfo = resolutioninfo.NewResolutionInfo()
+		imageResourceData.ResolutionInfo.Parse(file)
 	case 1010:
-		backgroundColorObject := backgroundcolor.NewBackgroundColor()
-		backgroundColorObject.Parse(file)
-		p = backgroundColorObject
+		imageResourceData.BackgroundColor = backgroundcolor.NewBackgroundColor()
+		imageResourceData.BackgroundColor.Parse(file)
 	case 1011:
-		printFlagsObject := printflags.NewPrintFlags()
-		printFlagsObject.Parse(file)
-		p = printFlagsObject
+		imageResourceData.PrintFlags = printflags.NewPrintFlags()
+		imageResourceData.PrintFlags.Parse(file)
 	case 1037:
-		angleObject := angle.NewAngle()
-		angleObject.Parse(file)
-		p = angleObject
+		imageResourceData.Angle = angle.NewAngle()
+		imageResourceData.Angle.Parse(file)
 	case 1039:
-		ICCProfileObject := icc.NewICCProfile()
-		ICCProfileObject.Parse(file)
-		p = ICCProfileObject
+		imageResourceData.ICCProfile = icc.NewICCProfile()
+		imageResourceData.ICCProfile.Parse(file)
 	case 1044:
-		IDObject := id.NewID()
-		IDObject.Parse(file)
-		p = IDObject
+		imageResourceData.ID = id.NewID()
+		imageResourceData.ID.Parse(file)
 	case 1050:
-		sliceObject := slice.NewSlice()
-		sliceObject.Parse(file)
-		p = sliceObject
+		imageResourceData.Slice = slice.NewSlice()
+		imageResourceData.Slice.Parse(file)
 	case 1057:
-		versionObject := version.NewVersion()
-		versionObject.Parse(file)
-		p = versionObject
+		imageResourceData.Version = version.NewVersion()
+		imageResourceData.Version.Parse(file)
 	case 1058:
-		spew.Dump(size)
-		exifObject := exif.NewExif()
-		exifObject.Parse(file, size)
-		p = exifObject
+		imageResourceData.Exif = exif.NewExif()
+		imageResourceData.Exif.Parse(file, size)
 	case 1060:
-		XMPObject := xmp.NewXMP()
-		XMPObject.Parse(file, size)
-		p = XMPObject
+		imageResourceData.XMP = xmp.NewXMP()
+		imageResourceData.XMP.Parse(file, size)
 	case 1061:
-		DigestObject := sec.NewSec()
-		DigestObject.Parse(file)
-		p = DigestObject
+		imageResourceData.Digest = sec.NewSec()
+		imageResourceData.Digest.Parse(file)
 	case 1062:
-		printScaleObject := printscale.NewPrintScale()
-		printScaleObject.Parse(file)
-		p = printScaleObject
+		imageResourceData.Printscale = printscale.NewPrintScale()
+		imageResourceData.Printscale.Parse(file)
 	case 1064:
-		pixelAspectRatioObject := pixelaspectratio.NewPixelAspectRatio()
-		pixelAspectRatioObject.Parse(file)
-		p = pixelAspectRatioObject
+		imageResourceData.Pixelaspectratio = pixelaspectratio.NewPixelAspectRatio()
+		imageResourceData.Pixelaspectratio.Parse(file)
 	case 1074:
-		measurementScaleObject := measurementscale.NewMeasurementScale()
-		measurementScaleObject.Parse(file)
-		p = measurementScaleObject
+		imageResourceData.MeasurementSacle = measurementscale.NewMeasurementScale()
+		imageResourceData.MeasurementSacle.Parse(file)
 		fallthrough
 	case 1075:
 		fallthrough
@@ -173,24 +157,18 @@ func parseResourceBlockData(file *os.File, resourceId uint16, size uint32) parse
 	case 1083:
 		fallthrough
 	case 1088:
-		descriptorVersion := fmtbytes.ReadBytesLong(file)
-		descriptorObject := descriptor.NewDescriptor()
-		descriptorObject.Parse(file)
-		descriptorObject.Version = descriptorVersion
-		p = descriptorObject
-		break
-
+		imageResourceData.Descriptor = descriptor.NewDescriptor()
+		imageResourceData.Descriptor.Version = fmtbytes.ReadBytesLong(file)
+		imageResourceData.Descriptor.Parse(file)
 	case 10000:
-		printFlagInfoObject := printflaginfo.NewPrintFlagInfo()
-		printFlagInfoObject.Parse(file)
-		p = printFlagInfoObject
-		break
+		imageResourceData.PrintFlagInfo = printflaginfo.NewPrintFlagInfo()
+		imageResourceData.PrintFlagInfo.Parse(file)
 	default:
 		fmt.Println("RESOURCE ID")
-		spew.Dump(resourceId)
+		spew.Dump(resourceID)
 		fmtbytes.ReadBytesNInt(file, size)
-		break
 	}
-
-	return p
+	if size%2 != 0 {
+		fmtbytes.ReadSingleByte(file)
+	}
 }
