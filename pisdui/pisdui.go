@@ -36,9 +36,12 @@ func NewPSD(path string) (*PSD, error) {
 // Parse takes the loaded file and parses it into
 // usable structs separated into the different main
 // parts of the file
-func (psd *PSD) Parse() error {
+func (psd *PSD) Parse() []error {
 	psd.Header = header.NewData()
-	psd.Header.Parse(psd.Fp)
+	errors := psd.Header.Parse(psd.Fp)
+	if ContainsError(errors) {
+		return errors
+	}
 
 	psd.ColorModeData = colormode.NewData()
 	psd.ColorModeData.Parse(psd.Fp, psd.Header.ColorMode)
@@ -46,7 +49,7 @@ func (psd *PSD) Parse() error {
 	imageResourceData := imageresource.NewData()
 	err := imageResourceData.Parse(psd.Fp)
 	if err != nil {
-		return err
+		return []error{err}
 	}
 	psd.ImageResources = imageResourceData
 	psd.LayerMaskInfo = layerandmask.NewData()
@@ -62,4 +65,14 @@ func (psd *PSD) SaveNew(path string) error {
 	}
 	psd.Header.Save(fp)
 	return nil
+}
+
+//thanks go for not having generics and making me do this
+func ContainsError(errors []error) bool {
+	for i := 0; i < len(errors); i++ {
+		if (errors[i]) != nil {
+			return true
+		}
+	}
+	return false
 }
