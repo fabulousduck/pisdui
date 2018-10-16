@@ -28,14 +28,17 @@ func NewData() *Data {
 
 /*Parse parses the contents of the photoshop
 file header into a Data struct*/
-func (fh *Data) Parse(file *os.File) {
-	fh.readSignature(file)
-	fh.readVersion(file)
+func (fh *Data) Parse(file *os.File) []error {
+	errors := []error{}
+	errors = append(errors, fh.readSignature(file))
+	errors = append(errors, fh.readVersion(file))
 	fh.readReserved(file)
-	fh.readChannels(file)
-	fh.readDimensions(file)
+	errors = append(errors, fh.readChannels(file))
+	errors = append(errors, fh.readDimensions(file))
 	fh.readDepth(file)
 	fh.readColorMode(file)
+
+	return errors
 }
 
 func (fh *Data) Save(file *os.File) error {
@@ -54,20 +57,22 @@ func (fh *Data) writeSignature(fp *os.File) error {
 	return nil
 }
 
-func (fh *Data) readSignature(file *os.File) {
+func (fh *Data) readSignature(file *os.File) error {
 	signature := fmtbytes.ReadBytesString(file, 4)
 	if signature != "8BPS" {
-		panic("Invalid header signature. got-" + signature + "-Expected 8BPS")
+		return errors.New("Invalid header signature. got-" + signature + "-Expected 8BPS")
 	}
 	fh.Signature = signature
+	return nil
 }
 
-func (fh *Data) readVersion(file *os.File) {
+func (fh *Data) readVersion(file *os.File) error {
 	version := fmtbytes.ReadBytesShort(file)
 	if version != 1 {
-		panic("Invalid file version.")
+		return errors.New("Invalid file version.")
 	}
 	fh.Version = version
+	return nil
 }
 
 func (fh *Data) readReserved(file *os.File) {
@@ -75,23 +80,25 @@ func (fh *Data) readReserved(file *os.File) {
 	fh.Reserved = reserved
 }
 
-func (fh *Data) readChannels(file *os.File) {
+func (fh *Data) readChannels(file *os.File) error {
 	channels := fmtbytes.ReadBytesShort(file)
 	if channels < 1 || channels > 56 {
-		panic("header channels out of range")
+		return errors.New("header channels out of range")
 	}
 	fh.Channels = channels
+	return nil
 }
 
-func (fh *Data) readDimensions(file *os.File) {
+func (fh *Data) readDimensions(file *os.File) error {
 	height := fmtbytes.ReadBytesLong(file)
 	width := fmtbytes.ReadBytesLong(file)
 	if width < 1 || width > 30000 || height < 1 || height > 30000 {
-		panic("invalid file dimensions")
+		return errors.New("invalid file dimensions")
 	}
 
 	fh.Height = height
 	fh.Width = width
+	return nil
 }
 
 func (fh *Data) readDepth(file *os.File) {
