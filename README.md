@@ -30,5 +30,5 @@ link to the .psd so I can implement it.
 
 # About the errors
 Since we do a metric butt load of individual reads to the file to get the data out, I have chosen not to error check them all since this would make the code extremely
-painfull to work with and a mess. Instead. at the end of each major part we check for the size already read, and then see if its still possible to read the next part
+painfull to work with and a mess.<br> Instead. at the end of each major part we check for the size already read, and then see if its still possible to read the next part
 of the file given its size. this way we can avoid doing the EOF checking.
