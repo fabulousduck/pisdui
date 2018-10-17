@@ -23,7 +23,11 @@ psd file interpreter in go
 
 # contributing
 
-At the moment I only have so many psd files to work with as I do not own a copy of Photoshop
+
+
+
+
+At the moment I        only have so many .psd files to work with as I do not own a copy of Photoshop
 
 If you have a .psd with resourceblocks that pisdui does not parse yet, please post an issue and attach a
 link to the .psd so I can implement it.
