@@ -2,7 +2,6 @@ package pisdui
 
 import (
 	"os"
-
 	"github.com/fabulousduck/pisdui/pisdui/colormode"
 	"github.com/fabulousduck/pisdui/pisdui/header"
 	"github.com/fabulousduck/pisdui/pisdui/imagedata"
