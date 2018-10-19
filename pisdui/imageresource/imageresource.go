@@ -18,6 +18,7 @@ import (
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/pixelaspectratio"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/sec"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/slice"
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/thumbnail"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/unicode"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/xmp"
 
@@ -43,6 +44,7 @@ type Data struct {
 	ResolutionInfo   *resolutioninfo.Resolutioninfo
 	BackgroundColor  *backgroundcolor.BackgroundColor
 	PrintFlags       *printflags.PrintFlags
+	Thumbnail        *thumbnail.Thumbnail
 	Angle            *angle.Angle
 	ICCProfile       *icc.ICCProfile
 	ID               *id.ID
@@ -116,6 +118,9 @@ func (imageResourceData *Data) parseResourceBlockData(file *os.File) {
 	case 1011:
 		imageResourceData.PrintFlags = printflags.NewPrintFlags()
 		imageResourceData.PrintFlags.Parse(file)
+	case 1036:
+		imageResourceData.Thumbnail = thumbnail.NewThumbnail()
+		imageResourceData.Thumbnail.Parse(file)
 	case 1037:
 		imageResourceData.Angle = angle.NewAngle()
 		imageResourceData.Angle.Parse(file)
