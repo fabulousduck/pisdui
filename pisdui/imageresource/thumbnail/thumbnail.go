@@ -1,7 +1,10 @@
 package thumbnail
 
 import (
+	"fmt"
 	"os"
+
+	"github.com/davecgh/go-spew/spew"
 
 	"github.com/pisdhooy/fmtbytes"
 )
@@ -26,7 +29,8 @@ func NewThumbnail() *Thumbnail {
 	return new(Thumbnail)
 }
 
-func (thumbnail *Thumbnail) Parse(file *os.File) {
+func (thumbnail *Thumbnail) Parse(file *os.File, dataBlockSize uint32) {
+
 	thumbnail.Format = fmtbytes.ReadBytesLong(file)
 	thumbnail.Width = fmtbytes.ReadBytesLong(file)
 	thumbnail.Height = fmtbytes.ReadBytesLong(file)
@@ -35,5 +39,8 @@ func (thumbnail *Thumbnail) Parse(file *os.File) {
 	thumbnail.CompressedSize = fmtbytes.ReadBytesLong(file)
 	thumbnail.BitsPerPixel = fmtbytes.ReadBytesShort(file)
 	thumbnail.NumberOfPlanes = fmtbytes.ReadBytesShort(file)
-	thumbnail.JIFFData = fmtbytes.ReadRawBytes(file, int(thumbnail.CompressedSize))
+	spew.Dump(file.Seek(0, 1))
+	thumbnail.JIFFData = fmtbytes.ReadRawBytes(file, int(dataBlockSize-28))
+	fmt.Println("DEBUG")
+	spew.Dump(dataBlockSize - 28)
 }

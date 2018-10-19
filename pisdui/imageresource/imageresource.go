@@ -120,7 +120,7 @@ func (imageResourceData *Data) parseResourceBlockData(file *os.File) {
 		imageResourceData.PrintFlags.Parse(file)
 	case 1036:
 		imageResourceData.Thumbnail = thumbnail.NewThumbnail()
-		imageResourceData.Thumbnail.Parse(file)
+		imageResourceData.Thumbnail.Parse(file, size)
 	case 1037:
 		imageResourceData.Angle = angle.NewAngle()
 		imageResourceData.Angle.Parse(file)
