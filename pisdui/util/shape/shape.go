@@ -2,7 +2,6 @@ package shape
 
 import (
 	"os"
-
 	"github.com/pisdhooy/fmtbytes"
 )
 
