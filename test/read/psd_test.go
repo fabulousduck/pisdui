@@ -3,7 +3,6 @@ package readtests
 import (
 	"fmt"
 	"testing"
-
 	"github.com/fabulousduck/pisdui/pisdui"
 )
 
