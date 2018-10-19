@@ -11,6 +11,7 @@ import (
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/backgroundcolor"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/exif"
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/global/altitude"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/global/angle"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/id"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/measurementscale"
@@ -46,6 +47,7 @@ type Data struct {
 	ICCProfile       *icc.ICCProfile
 	ID               *id.ID
 	UnicodeString    *unicode.UnicodeString
+	Altitude         *altitude.Altitude
 	Slice            *slice.Slice
 	Version          *version.Version
 	Exif             *exif.Exif
@@ -126,6 +128,9 @@ func (imageResourceData *Data) parseResourceBlockData(file *os.File) {
 	case 1045:
 		imageResourceData.UnicodeString = unicode.NewUnicodeString()
 		imageResourceData.UnicodeString.Parse(file)
+	case 1049:
+		imageResourceData.Altitude = altitude.NewAltitude()
+		imageResourceData.Altitude.Parse(file)
 	case 1050:
 		imageResourceData.Slice = slice.NewSlice()
 		imageResourceData.Slice.Parse(file)
