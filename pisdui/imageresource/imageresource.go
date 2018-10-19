@@ -17,6 +17,7 @@ import (
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/pixelaspectratio"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/sec"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/slice"
+	"github.com/fabulousduck/pisdui/pisdui/imageresource/unicode"
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/xmp"
 
 	"github.com/fabulousduck/pisdui/pisdui/imageresource/printflags"
@@ -44,6 +45,7 @@ type Data struct {
 	Angle            *angle.Angle
 	ICCProfile       *icc.ICCProfile
 	ID               *id.ID
+	UnicodeString    *unicode.UnicodeString
 	Slice            *slice.Slice
 	Version          *version.Version
 	Exif             *exif.Exif
@@ -86,7 +88,6 @@ func (resourceBlockSection *Data) Parse(file *os.File) error {
 		pos, _ := file.Seek(0, 1)
 		currPos = pos
 	}
-	spew.Dump(resourceBlockSection)
 	fmt.Println("pos after image resource block parsing : ", currPos)
 	return nil
 }
@@ -98,9 +99,11 @@ func (imageResourceData *Data) parseResourceBlockData(file *os.File) {
 	}
 	resourceID := fmtbytes.ReadBytesShort(file)
 	pascalString := fmtbytes.ParsePascalString(file)
-	pascalString = pascalString
+	if pascalString != "" {
+		//Todo : find a psd that uses this an parse it correctly
+	}
 	size := fmtbytes.ReadBytesLong(file)
-	//TODO split this up into seperate switches instead of one massive one
+
 	switch resourceID {
 	case 1005:
 		imageResourceData.ResolutionInfo = resolutioninfo.NewResolutionInfo()
@@ -120,6 +123,9 @@ func (imageResourceData *Data) parseResourceBlockData(file *os.File) {
 	case 1044:
 		imageResourceData.ID = id.NewID()
 		imageResourceData.ID.Parse(file)
+	case 1045:
+		imageResourceData.UnicodeString = unicode.NewUnicodeString()
+		imageResourceData.UnicodeString.Parse(file)
 	case 1050:
 		imageResourceData.Slice = slice.NewSlice()
 		imageResourceData.Slice.Parse(file)

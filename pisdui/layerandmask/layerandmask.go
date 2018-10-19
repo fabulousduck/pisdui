@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/davecgh/go-spew/spew"
+	additionalinfo "github.com/fabulousduck/pisdui/pisdui/layerandmask/additionalInfo"
 	"github.com/fabulousduck/pisdui/pisdui/layerandmask/layerinfo"
 	"github.com/pisdhooy/fmtbytes"
 )
@@ -15,7 +16,7 @@ type Data struct {
 	Length                     uint32
 	LayerInfo                  *layerinfo.LayerInfo
 	GlobalLayerMaskInfo        *GlobalLayerMaskInfo
-	AdditionalLayerInformation *AdditionalLayerInformation
+	AdditionalLayerInformation *additionalinfo.AdditionalInfo
 }
 
 type GlobalLayerMaskInfo struct {
@@ -46,6 +47,11 @@ func (layerandmaskobject *Data) Parse(file *os.File) {
 	fmt.Println("LAYER INFO INDEX FP")
 	spew.Dump(file.Seek(0, 1))
 	layerandmaskobject.Length = fmtbytes.ReadBytesLong(file)
+
+	if layerandmaskobject.Length%2 != 0 {
+		layerandmaskobject.Length++
+	}
+
 	layerInfoObject := layerinfo.NewLayerInfo()
 	layerInfoObject.Parse(file)
 	layerandmaskobject.LayerInfo = layerInfoObject

@@ -1,4 +1,4 @@
-package additionalInfo
+package additionalinfo
 
 import "os"
 
