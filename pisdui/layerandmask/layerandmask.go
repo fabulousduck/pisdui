@@ -55,5 +55,5 @@ func (layerandmaskobject *Data) Parse(file *os.File) {
 	layerInfoObject := layerinfo.NewLayerInfo()
 	layerInfoObject.Parse(file)
 	layerandmaskobject.LayerInfo = layerInfoObject
-	spew.Dump(layerandmaskobject)
+	// spew.Dump(layerandmaskobject)
 }
