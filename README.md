@@ -1,5 +1,5 @@
 # pisdui
-psd file interpreter in go
+psd file header interpreter in go
 
 # Example
 
