@@ -1,5 +1,5 @@
 # pisdui
-psd file header interpreter in go
+psd file resource block interpreter in go
 
 # Example
 
